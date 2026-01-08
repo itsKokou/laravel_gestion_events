@@ -41,11 +41,17 @@
                             @endforeach
                         </td>
                         <td style="padding: 12px; text-align:right;">
-                            <form method="POST" action="{{ route('admin.controllers.revoke', $user) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn secondary" type="submit">Retirer rôle</button>
-                            </form>
+                            <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+                                <form method="POST" action="{{ route('admin.controllers.reset_password', $user) }}">
+                                    @csrf
+                                    <button class="btn secondary" type="submit">Réinitialiser MDP</button>
+                                </form>
+                                <form method="POST" action="{{ route('admin.controllers.revoke', $user) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn secondary" type="submit">Retirer rôle</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

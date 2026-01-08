@@ -34,6 +34,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/controleurs', [AdminControllerManagementController::class, 'index'])->name('controllers.index');
     Route::get('/controleurs/nouveau', [AdminControllerManagementController::class, 'create'])->name('controllers.create');
     Route::post('/controleurs', [AdminControllerManagementController::class, 'store'])->name('controllers.store');
+    Route::post('/controleurs/{user}/reset-password', [AdminControllerManagementController::class, 'resetPassword'])->name('controllers.reset_password');
     Route::delete('/controleurs/{user}', [AdminControllerManagementController::class, 'revoke'])->name('controllers.revoke');
 
     Route::get('/soirees', [AdminEventController::class, 'index'])->name('events.index');

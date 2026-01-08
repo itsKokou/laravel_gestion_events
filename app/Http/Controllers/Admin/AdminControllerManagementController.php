@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpsertControllerRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\ControllerCredentialsNotification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -43,10 +44,14 @@ class AdminControllerManagementController extends Controller
 
         $user = User::query()->where('email', $email)->first();
         $created = false;
+        $shouldSendCredentials = false;
+        $plainPasswordToSend = null;
 
         if (!$user) {
             $created = true;
             $generatedPassword = $password ?: Str::password(12);
+            $shouldSendCredentials = true;
+            $plainPasswordToSend = $generatedPassword;
 
             $user = User::create([
                 'name' => $name ?: $email,
@@ -65,9 +70,13 @@ class AdminControllerManagementController extends Controller
 
         $user->roles()->syncWithoutDetaching([$controllerRole->id]);
 
+        if ($shouldSendCredentials && is_string($plainPasswordToSend)) {
+            $user->notify(new ControllerCredentialsNotification($plainPasswordToSend, 'created'));
+        }
+
         return redirect()
             ->route('admin.controllers.index')
-            ->with('status', $created ? 'Contrôleur créé et autorisé.' : 'Rôle contrôleur attribué.');
+            ->with('status', $created ? 'Contrôleur créé, autorisé et email envoyé.' : 'Rôle contrôleur attribué.');
     }
 
     public function revoke(User $user)
@@ -78,5 +87,16 @@ class AdminControllerManagementController extends Controller
         }
 
         return redirect()->route('admin.controllers.index')->with('status', 'Rôle contrôleur retiré.');
+    }
+
+    public function resetPassword(User $user)
+    {
+        $newPassword = Str::password(12);
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        $user->notify(new ControllerCredentialsNotification($newPassword, 'reset'));
+
+        return redirect()->route('admin.controllers.index')->with('status', 'Mot de passe réinitialisé et email envoyé.');
     }
 }
