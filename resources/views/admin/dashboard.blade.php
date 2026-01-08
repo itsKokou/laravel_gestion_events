@@ -12,6 +12,7 @@
             <div style="display:flex; gap:10px; align-items:flex-start;">
                 <a class="btn secondary" href="{{ route('admin.events.index') }}">Soirées</a>
                 <a class="btn secondary" href="{{ route('admin.orders.index') }}">Réservations</a>
+                <a class="btn secondary" href="{{ route('admin.controllers.index') }}">Contrôleurs</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="btn" type="submit">Déconnexion</button>

@@ -7,6 +7,7 @@ use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\TicketQrController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminControllerManagementController;
 use App\Http\Controllers\Admin\AdminEventController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,11 @@ Route::get('/tickets/{ticket}/qr.svg', [TicketQrController::class, 'show'])->nam
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/controleurs', [AdminControllerManagementController::class, 'index'])->name('controllers.index');
+    Route::get('/controleurs/nouveau', [AdminControllerManagementController::class, 'create'])->name('controllers.create');
+    Route::post('/controleurs', [AdminControllerManagementController::class, 'store'])->name('controllers.store');
+    Route::delete('/controleurs/{user}', [AdminControllerManagementController::class, 'revoke'])->name('controllers.revoke');
 
     Route::get('/soirees', [AdminEventController::class, 'index'])->name('events.index');
     Route::get('/soirees/nouvelle', [AdminEventController::class, 'create'])->name('events.create');

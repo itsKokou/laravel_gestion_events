@@ -33,6 +33,7 @@ class RoleAccessTest extends TestCase
 
         $this->actingAs($controller);
         $this->get(route('admin.dashboard'))->assertForbidden();
+        $this->get(route('admin.controllers.index'))->assertForbidden();
 
         $admin = User::create([
             'name' => 'Admin',
@@ -43,5 +44,6 @@ class RoleAccessTest extends TestCase
 
         $this->actingAs($admin);
         $this->get(route('admin.dashboard'))->assertOk();
+        $this->get(route('admin.controllers.index'))->assertOk();
     }
 }
