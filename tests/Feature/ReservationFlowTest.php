@@ -96,7 +96,7 @@ class ReservationFlowTest extends TestCase
         $this->assertDatabaseCount('tickets', 1);
 
         $order = Order::firstOrFail();
-        $this->assertSame('paid', $order->status);
+        $this->assertSame('pending_payment', $order->status);
         $this->assertNotEmpty($order->order_number);
 
         $ticket = Ticket::firstOrFail();
@@ -104,5 +104,16 @@ class ReservationFlowTest extends TestCase
         $this->assertSame($event->id, $ticket->event_id);
         $this->assertSame($ticketType->id, $ticket->ticket_type_id);
         $this->assertNotEmpty($ticket->qr_token);
+
+        // Paiement simulé (PAYTECH_MODE=simulate)
+        $pay = $this->post(route('public.orders.pay', $order));
+        $pay->assertRedirect(route('public.orders.show', $order));
+
+        $order->refresh();
+        $this->assertSame('paid', $order->status);
+
+        $qr = $this->get(route('tickets.qr', $ticket));
+        $qr->assertOk();
+        $this->assertStringContainsString('image/svg+xml', (string) $qr->headers->get('Content-Type'));
     }
 }

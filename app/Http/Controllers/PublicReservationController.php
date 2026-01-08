@@ -93,13 +93,12 @@ class PublicReservationController extends Controller
                 'order_number' => $orderNumber,
                 'customer_email' => $data['customer_email'],
                 'customer_phone' => $data['customer_phone'] ?? null,
-                'status' => 'paid', // Paiement PayTech à brancher : ici on simule une commande payée.
+                'status' => 'pending_payment',
                 'currency' => $ticketType->currency,
                 'subtotal_cents' => $subtotal,
                 'addons_total_cents' => $addonsTotal,
                 'total_cents' => $total,
                 'agreed_terms_at' => now(),
-                'paid_at' => now(),
                 'metadata' => [
                     'addons' => $addons->map(fn ($a) => ['id' => $a->id, 'code' => $a->code, 'name' => $a->name, 'price_cents' => $a->price_cents])->values()->all(),
                 ],
@@ -123,7 +122,7 @@ class PublicReservationController extends Controller
             return $order->fresh(['tickets.ticketType', 'event']);
         });
 
-        return redirect()->route('public.orders.show', $order)->with('status', "Réservation confirmée (paiement simulé).");
+        return redirect()->route('public.orders.show', $order)->with('status', "Commande créée. Paiement requis pour activer les billets.");
     }
 
     public function show(Order $order)

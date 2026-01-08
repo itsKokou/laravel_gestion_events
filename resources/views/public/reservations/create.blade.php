@@ -80,39 +80,41 @@
         <div style="margin-top: 14px;">
             <div style="font-weight: 800; margin-bottom: 8px;">Participants</div>
             <div class="muted" style="margin-bottom: 10px;">
-                Astuce : pour l’instant, le formulaire génère 1 participant (billet). Si vous mettez une quantité &gt; 1, dupliquez les blocs côté client (ou revenez me demander et je le rends dynamique en JS).
+                Le nombre de blocs “participant” s’ajuste automatiquement à la quantité.
             </div>
 
             @php($attendees = old('attendees', [['first_name'=>'','last_name'=>'','email'=>'','phone'=>'','birthdate'=>'']]))
-            @foreach ($attendees as $i => $a)
-                <div class="card" style="margin-bottom: 12px;">
-                    <div style="font-weight: 800; margin-bottom: 10px;">Billet #{{ $i + 1 }}</div>
-                    <div class="grid grid2">
-                        <div>
-                            <label>Prénom</label>
-                            <input name="attendees[{{ $i }}][first_name]" value="{{ $a['first_name'] ?? '' }}" required />
+            <div id="attendeesContainer">
+                @foreach ($attendees as $i => $a)
+                    <div class="card attendeeCard" data-index="{{ $i }}" style="margin-bottom: 12px;">
+                        <div style="font-weight: 800; margin-bottom: 10px;">Billet #<span class="attendeeNumber">{{ $i + 1 }}</span></div>
+                        <div class="grid grid2">
+                            <div>
+                                <label>Prénom</label>
+                                <input name="attendees[{{ $i }}][first_name]" value="{{ $a['first_name'] ?? '' }}" required />
+                            </div>
+                            <div>
+                                <label>Nom</label>
+                                <input name="attendees[{{ $i }}][last_name]" value="{{ $a['last_name'] ?? '' }}" required />
+                            </div>
                         </div>
-                        <div>
-                            <label>Nom</label>
-                            <input name="attendees[{{ $i }}][last_name]" value="{{ $a['last_name'] ?? '' }}" required />
+                        <div class="grid grid2" style="margin-top: 10px;">
+                            <div>
+                                <label>Email</label>
+                                <input name="attendees[{{ $i }}][email]" value="{{ $a['email'] ?? '' }}" required />
+                            </div>
+                            <div>
+                                <label>Téléphone (optionnel)</label>
+                                <input name="attendees[{{ $i }}][phone]" value="{{ $a['phone'] ?? '' }}" />
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label>Date de naissance</label>
+                            <input type="date" name="attendees[{{ $i }}][birthdate]" value="{{ $a['birthdate'] ?? '' }}" required />
                         </div>
                     </div>
-                    <div class="grid grid2" style="margin-top: 10px;">
-                        <div>
-                            <label>Email</label>
-                            <input name="attendees[{{ $i }}][email]" value="{{ $a['email'] ?? '' }}" required />
-                        </div>
-                        <div>
-                            <label>Téléphone (optionnel)</label>
-                            <input name="attendees[{{ $i }}][phone]" value="{{ $a['phone'] ?? '' }}" />
-                        </div>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <label>Date de naissance</label>
-                        <input type="date" name="attendees[{{ $i }}][birthdate]" value="{{ $a['birthdate'] ?? '' }}" required />
-                    </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
 
         <div style="margin-top: 12px;">
@@ -123,8 +125,67 @@
         </div>
 
         <div style="margin-top: 14px; display:flex; gap:10px; justify-content:flex-end;">
-            <button class="btn" type="submit">Confirmer (paiement simulé)</button>
+            <button class="btn" type="submit">Créer la commande</button>
         </div>
     </form>
+
+    <script>
+        const quantityInput = document.getElementById('quantity');
+        const container = document.getElementById('attendeesContainer');
+
+        function cardTemplate(i) {
+            return `
+                <div class="card attendeeCard" data-index="${i}" style="margin-bottom: 12px;">
+                    <div style="font-weight: 800; margin-bottom: 10px;">Billet #<span class="attendeeNumber">${i + 1}</span></div>
+                    <div class="grid grid2">
+                        <div>
+                            <label>Prénom</label>
+                            <input name="attendees[${i}][first_name]" required />
+                        </div>
+                        <div>
+                            <label>Nom</label>
+                            <input name="attendees[${i}][last_name]" required />
+                        </div>
+                    </div>
+                    <div class="grid grid2" style="margin-top: 10px;">
+                        <div>
+                            <label>Email</label>
+                            <input name="attendees[${i}][email]" required />
+                        </div>
+                        <div>
+                            <label>Téléphone (optionnel)</label>
+                            <input name="attendees[${i}][phone]" />
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <label>Date de naissance</label>
+                        <input type="date" name="attendees[${i}][birthdate]" required />
+                    </div>
+                </div>
+            `;
+        }
+
+        function syncAttendees() {
+            const qty = Math.max(1, Math.min(10, parseInt(quantityInput.value || '1', 10)));
+            quantityInput.value = qty;
+
+            const current = container.querySelectorAll('.attendeeCard');
+            const currentCount = current.length;
+
+            if (currentCount < qty) {
+                for (let i = currentCount; i < qty; i++) {
+                    container.insertAdjacentHTML('beforeend', cardTemplate(i));
+                }
+            } else if (currentCount > qty) {
+                for (let i = currentCount - 1; i >= qty; i--) {
+                    current[i].remove();
+                }
+            }
+        }
+
+        quantityInput.addEventListener('change', syncAttendees);
+        quantityInput.addEventListener('input', syncAttendees);
+        syncAttendees();
+    </script>
 @endsection
 
