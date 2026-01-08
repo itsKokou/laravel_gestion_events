@@ -26,6 +26,9 @@
 </head>
 <body>
     <div class="container">
+        @php($authUser = auth()->user())
+        @php($authUser?->loadMissing('roles'))
+
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 18px;">
             <div>
                 <a href="{{ route('public.events.index') }}" style="text-decoration:none; font-weight:700; letter-spacing:0.2px;">
@@ -35,7 +38,20 @@
             </div>
             <div style="display:flex; gap:10px;">
                 <a class="btn secondary" href="{{ route('public.events.index') }}">Soirées à venir</a>
-                <a class="btn secondary" href="{{ route('scanner.home') }}">Scanner</a>
+                @auth
+                    @if ($authUser && $authUser->hasRole('admin'))
+                        <a class="btn secondary" href="{{ route('admin.dashboard') }}">Admin</a>
+                    @endif
+                    @if ($authUser && $authUser->hasAnyRole(['admin', 'controller']))
+                        <a class="btn secondary" href="{{ route('scanner.home') }}">Scanner</a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="btn secondary" type="submit">Déconnexion</button>
+                    </form>
+                @else
+                    <a class="btn secondary" href="{{ route('login') }}">Connexion</a>
+                @endauth
             </div>
         </div>
 

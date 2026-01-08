@@ -16,7 +16,12 @@
             </div>
             <div style="display:flex; gap:10px;">
                 <a class="btn secondary" href="{{ route('public.events.show', $order->event) }}">Retour soirée</a>
-                <a class="btn secondary" href="{{ route('scanner.event', $order->event) }}">Scanner</a>
+                @auth
+                    @php(auth()->user()?->loadMissing('roles'))
+                    @if (auth()->user()?->hasAnyRole(['admin', 'controller']))
+                        <a class="btn secondary" href="{{ route('scanner.event', $order->event) }}">Scanner</a>
+                    @endif
+                @endauth
                 @if ($order->status !== 'paid')
                     <form method="POST" action="{{ route('public.orders.pay', $order) }}">
                         @csrf

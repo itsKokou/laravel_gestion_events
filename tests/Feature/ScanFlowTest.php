@@ -5,16 +5,35 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Event;
 use App\Models\Order;
+use App\Models\Role;
 use App\Models\Ticket;
 use App\Models\TicketType;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ScanFlowTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function actingAsController(): void
+    {
+        $controllerRole = Role::firstOrCreate(['slug' => 'controller'], ['name' => 'Contrôleur', 'slug' => 'controller']);
+
+        $user = User::create([
+            'name' => 'Ctrl',
+            'email' => 'ctrl@example.test',
+            'password' => Hash::make('password'),
+        ]);
+        $user->roles()->attach($controllerRole);
+
+        $this->actingAs($user);
+    }
+
     public function test_scan_returns_valid_then_already_used(): void
     {
+        $this->actingAsController();
+
         $event = Event::create([
             'name' => 'Soirée Scan',
             'slug' => 'soiree-scan',
@@ -79,6 +98,8 @@ class ScanFlowTest extends TestCase
 
     public function test_scan_returns_invalid_for_unknown_token(): void
     {
+        $this->actingAsController();
+
         $event = Event::create([
             'name' => 'Soirée Scan',
             'slug' => 'soiree-scan',
