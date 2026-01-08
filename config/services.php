@@ -35,12 +35,4 @@ return [
         ],
     ],
 
-    'paytech' => [
-        // 'simulate' (par défaut) permet de tester le flux sans compte PayTech.
-        // Mettre 'live' + renseigner les clés pour l'intégration réelle.
-        'mode' => env('PAYTECH_MODE', 'simulate'),
-        'api_key' => env('PAYTECH_API_KEY'),
-        'api_secret' => env('PAYTECH_API_SECRET'),
-    ],
-
 ];

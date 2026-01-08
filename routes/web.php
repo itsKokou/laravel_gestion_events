@@ -17,9 +17,6 @@ Route::post('/soirees/{event:slug}/reserver', [PublicReservationController::clas
 Route::get('/commande/{order:order_number}', [PublicReservationController::class, 'show'])->name('public.orders.show');
 Route::post('/commande/{order:order_number}/payer', [PaymentController::class, 'pay'])->name('public.orders.pay');
 
-Route::post('/paytech/callback', [PaymentController::class, 'callback'])->name('paytech.callback');
-Route::get('/paytech/return', [PaymentController::class, 'returned'])->name('paytech.return');
-
 Route::get('/tickets/{ticket}/qr.svg', [TicketQrController::class, 'show'])->name('tickets.qr');
 
 Route::get('/scanner', [ScannerController::class, 'home'])->name('scanner.home');

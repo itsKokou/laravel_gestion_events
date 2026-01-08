@@ -31,7 +31,7 @@
         <div class="card" style="margin-bottom: 14px;">
             <div style="font-weight: 850;">Paiement requis</div>
             <div class="muted" style="margin-top: 6px;">
-                Les billets ne sont valides au scan qu’après paiement. (Actuellement : <strong>mode {{ config('services.paytech.mode') }}</strong>)
+                Les billets ne sont valides au scan qu’après paiement. (Paiement simulé)
             </div>
         </div>
     @endif
