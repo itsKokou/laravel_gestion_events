@@ -8,7 +8,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
@@ -51,6 +50,7 @@
             }
 
             .btn {
+                font-size: 14px;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -131,25 +131,51 @@
             .error {
                 color: #b91c1c;
             }
+
+            /* Layout admin avec sidebar */
+            .admin-wrapper {
+                display: flex;
+                min-height: 100vh;
+            }
+
+            .admin-content {
+                flex: 1;
+                margin-left: 280px;
+                padding: 32px;
+            }
+
+            @media (max-width: 768px) {
+                .admin-content {
+                    margin-left: 0;
+                    padding: 24px 16px;
+                    padding-top: 70px;
+                }
+            }
         </style>
     @endif
 </head>
 
 <body>
-    <!-- Navbar client -->
-    @include('shared.navbar.navbar-client')
+    <div class="admin-wrapper">
+        <!-- Sidebar admin -->
+        @include('shared.navbar.navbar-admin')
 
-    <div class="container">
-        @if (session('status'))
-            <div class="card" style="margin-bottom: 24px; padding: 16px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.05), rgba(245, 130, 32, 0.02)); border-color: rgba(234, 88, 12, 0.2);">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--we-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; flex-shrink: 0;">✓</div>
-                    <div style="color: var(--we-text); font-weight: 600;">{{ session('status') }}</div>
+        <!-- Contenu principal -->
+        <main class="admin-content">
+            @if (session('status'))
+                <div class="card"
+                    style="margin-bottom: 24px; padding: 16px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.05), rgba(245, 130, 32, 0.02)); border-color: rgba(234, 88, 12, 0.2);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div
+                            style="width: 24px; height: 24px; border-radius: 50%; background: var(--we-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; flex-shrink: 0;">
+                            ✓</div>
+                        <div style="color: var(--we-text); font-weight: 600;">{{ session('status') }}</div>
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @yield('content')
+            @yield('content')
+        </main>
     </div>
 </body>
 

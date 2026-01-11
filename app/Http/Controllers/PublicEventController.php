@@ -14,6 +14,7 @@ class PublicEventController extends Controller
         $events = Event::query()
             ->where('status', 'published')
             ->where('starts_at', '>=', now()->subHours(6))
+            ->with(['ticketTypes' => fn ($q) => $q->where('is_active', true)])
             ->when($q !== '', function ($query) use ($q) {
                 $query->where(function ($sub) use ($q) {
                     $sub->where('name', 'like', "%{$q}%")

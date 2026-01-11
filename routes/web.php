@@ -5,6 +5,7 @@ use App\Http\Controllers\PublicReservationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\TicketQrController;
+use App\Http\Controllers\PublicOrderInvoiceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminControllerManagementController;
@@ -20,10 +21,13 @@ Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 
 Route::get('/soirees', [PublicEventController::class, 'index'])->name('public.events.index');
 Route::get('/soirees/{event:slug}', [PublicEventController::class, 'show'])->name('public.events.show');
+// Page À propos
+Route::view('/a-propos', 'public.about')->name('public.about');
 
 Route::get('/soirees/{event:slug}/reserver', [PublicReservationController::class, 'create'])->name('public.reservations.create');
 Route::post('/soirees/{event:slug}/reserver', [PublicReservationController::class, 'store'])->name('public.reservations.store');
 Route::get('/commande/{order:order_number}', [PublicReservationController::class, 'show'])->name('public.orders.show');
+Route::get('/commande/{order:order_number}/facture.pdf', [PublicOrderInvoiceController::class, 'download'])->name('public.orders.invoice');
 Route::post('/commande/{order:order_number}/payer', [PaymentController::class, 'pay'])->name('public.orders.pay');
 
 Route::get('/tickets/{ticket}/qr.svg', [TicketQrController::class, 'show'])->name('tickets.qr');
