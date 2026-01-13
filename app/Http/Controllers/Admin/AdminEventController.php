@@ -80,7 +80,7 @@ class AdminEventController extends Controller
                 'name' => $ticketTypeData['name'],
                 'code' => 'ticket-' . $event->id . '-' . $index, // Code simple pour la compatibilité avec la base de données
                 'price_cents' => $ticketTypeData['price_cents'],
-                'currency' => $ticketTypeData['currency'] ?? 'XOF',
+                'currency' => $ticketTypeData['currency'] ?? 'FCFA',
                 'quantity_limit' => $ticketTypeData['quantity_limit'] ?? null,
                 'sales_starts_at' => $ticketTypeData['sales_starts_at'],
                 'sales_ends_at' => $ticketTypeData['sales_ends_at'],
@@ -149,7 +149,7 @@ class AdminEventController extends Controller
                 'name' => $ticketTypeData['name'],
                 'code' => 'ticket-' . $event->id . '-' . $index, // Code simple pour la compatibilité avec la base de données
                 'price_cents' => $ticketTypeData['price_cents'],
-                'currency' => $ticketTypeData['currency'] ?? 'XOF',
+                'currency' => $ticketTypeData['currency'] ?? 'FCFA',
                 'quantity_limit' => $ticketTypeData['quantity_limit'] ?? null,
                 'sales_starts_at' => $ticketTypeData['sales_starts_at'],
                 'sales_ends_at' => $ticketTypeData['sales_ends_at'],

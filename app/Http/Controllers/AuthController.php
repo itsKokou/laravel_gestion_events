@@ -30,7 +30,29 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        // Rediriger selon le rôle de l'utilisateur
+        $user = Auth::user();
+        $user->loadMissing('roles');
+
+        // Vérifier l'URL de redirection prévue (intended)
+        $intended = $request->session()->pull('url.intended');
+
+        if ($user->hasAnyRole(['admin'])) {
+            // Si l'URL prévue est valide et accessible, l'utiliser, sinon dashboard admin
+            if ($intended && str_starts_with($intended, url('/admin'))) {
+                return redirect($intended);
+            }
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->hasAnyRole(['controller'])) {
+            // Si l'URL prévue est valide et accessible (scanner), l'utiliser, sinon scanner home
+            if ($intended && str_starts_with($intended, url('/scanner'))) {
+                return redirect($intended);
+            }
+            return redirect()->route('scanner.home');
+        }
+
+        // Par défaut, rediriger vers le dashboard admin
+        return redirect()->route('admin.dashboard');
     }
 
     public function destroy(Request $request)

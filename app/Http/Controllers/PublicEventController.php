@@ -36,13 +36,29 @@ class PublicEventController extends Controller
     {
         abort_unless($event->status === 'published', 404);
 
+        $now = now();
+
+        // Charger tous les tarifs actifs
         $event->load([
             'ticketTypes' => fn ($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('price_cents'),
             'addons' => fn ($q) => $q->where('is_active', true)->orderBy('price_cents'),
         ]);
 
+        // Déterminer le tarif actif selon la période actuelle
+        $activeTicketType = $event->ticketTypes->first(function ($type) use ($now) {
+            // Si les périodes sont nulles, le tarif est toujours disponible
+            if (!$type->sales_starts_at && !$type->sales_ends_at) {
+                return true;
+            }
+            // Sinon, vérifier si on est dans la période
+            return $type->sales_starts_at && $type->sales_ends_at
+                && $type->sales_starts_at <= $now
+                && $type->sales_ends_at >= $now;
+        });
+
         return view('public.events.show', [
             'event' => $event,
+            'activeTicketType' => $activeTicketType,
         ]);
     }
 }

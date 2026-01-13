@@ -132,8 +132,18 @@
                     <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 20px; letter-spacing: -0.3px;">Tarifs</h3>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         @foreach ($event->ticketTypes as $type)
+                            @php
+                                $isActive = $activeTicketType && $activeTicketType->id === $type->id;
+                            @endphp
                             <div
-                                style="padding: 16px; background: #fafafa; border-radius: 12px; border: 1px solid var(--we-border);">
+                                style="padding: 16px; background: {{ $isActive ? 'linear-gradient(135deg, rgba(234, 88, 12, 0.05), rgba(245, 130, 32, 0.02))' : '#fafafa' }}; border-radius: 12px; border: {{ $isActive ? '2px solid rgba(234, 88, 12, 0.3)' : '1px solid var(--we-border)' }}; position: relative;">
+                                @if($isActive)
+                                    <div style="position: absolute; top: -8px; right: 16px;">
+                                        <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: var(--we-primary); color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);">
+                                            Actuel
+                                        </span>
+                                    </div>
+                                @endif
                                 <div
                                     style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px;">
                                     <div style="flex: 1;">
@@ -142,8 +152,13 @@
                                         @if($type->description)
                                             <div style="font-size: 13px; color: var(--we-muted);">{{ $type->description }}</div>
                                         @endif
+                                        @if($type->sales_starts_at && $type->sales_ends_at)
+                                            <div style="font-size: 12px; color: var(--we-muted); margin-top: 4px;">
+                                                Du {{ $type->sales_starts_at->format('d/m/Y H:i') }} au {{ $type->sales_ends_at->format('d/m/Y H:i') }}
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div style="font-weight: 800; font-size: 20px; color: var(--we-primary); white-space: nowrap;">
+                                    <div style="font-weight: 800; font-size: 20px; color: {{ $isActive ? 'var(--we-primary)' : 'var(--we-text)' }}; white-space: nowrap;">
                                         {{ number_format($type->price_cents, 0, ',', ' ') }} {{ $type->currency }}
                                     </div>
                                 </div>

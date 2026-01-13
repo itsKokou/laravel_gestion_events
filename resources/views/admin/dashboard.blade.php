@@ -29,7 +29,7 @@
                 </div>
             </a>
 
-            <!-- Carte Commandes -->
+            <!-- Carte Réservations -->
             <a href="{{ route('admin.orders.index') }}" class="card" style="padding: 28px; position: relative; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; text-decoration: none; display: block; cursor: pointer;"
                onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(15,23,42,0.12)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.04), 0 12px 30px rgba(15,23,42,0.06)'">
@@ -37,7 +37,7 @@
                 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
                     <div style="width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(96, 165, 250, 0.08)); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;">🎫</div>
                     <div style="flex: 1;">
-                        <div class="muted" style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Commandes</div>
+                        <div class="muted" style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Réservation</div>
                         <div style="font-size: 32px; font-weight: 900; color: var(--we-text); line-height: 1;">{{ $ordersCount }}</div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                 </div>
             </a>
 
-            <!-- Carte Commandes payées -->
+            <!-- Carte Réservations payées -->
             <a href="{{ route('admin.orders.index') }}?status=paid" class="card" style="padding: 28px; position: relative; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; text-decoration: none; display: block; cursor: pointer;"
                onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(15,23,42,0.12)'"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.04), 0 12px 30px rgba(15,23,42,0.06)'">
@@ -62,7 +62,7 @@
                     @if($ordersCount > 0)
                         {{ round(($paidOrdersCount / $ordersCount) * 100) }}% du total
                     @else
-                        Aucune commande
+                        Aucune réservation
                     @endif
                 </div>
             </a>

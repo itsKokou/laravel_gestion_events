@@ -12,8 +12,14 @@ class TicketQrController extends Controller
 {
     public function show(Ticket $ticket)
     {
+        // Le QR code contient une URL qui permet de scanner automatiquement le billet
+        $scanUrl = route('scanner.scan.url', [
+            'event' => $ticket->event->slug,
+            'token' => $ticket->qr_token,
+        ]);
+
         $qrCode = new QrCode(
-            data: $ticket->qr_token,
+            data: $scanUrl,
             encoding: new Encoding('UTF-8'),
             errorCorrectionLevel: ErrorCorrectionLevel::Medium,
             size: 260,

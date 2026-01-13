@@ -17,13 +17,40 @@ class PublicReservationController extends Controller
     {
         abort_unless($event->status === 'published', 404);
 
+        $now = now();
+
+        // Charger les tarifs actifs et disponibles selon la période actuelle
+        // Si sales_starts_at et sales_ends_at sont null, le tarif est toujours disponible
         $event->load([
-            'ticketTypes' => fn ($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('price_cents'),
-            'addons' => fn ($q) => $q->where('is_active', true)->orderBy('price_cents'),
+            'ticketTypes' => fn($q) => $q->where('is_active', true)
+                ->where(function ($query) use ($now) {
+                    $query->where(function ($q) use ($now) {
+                        // Tarif avec période définie et dans la période actuelle
+                        $q->whereNotNull('sales_starts_at')
+                            ->whereNotNull('sales_ends_at')
+                            ->where('sales_starts_at', '<=', $now)
+                            ->where('sales_ends_at', '>=', $now);
+                    })->orWhere(function ($q) {
+                        // Tarif sans période définie (toujours disponible)
+                        $q->whereNull('sales_starts_at')
+                            ->whereNull('sales_ends_at');
+                    });
+                })
+                ->orderBy('sort_order')
+                ->orderBy('price_cents'),
+            'addons' => fn($q) => $q->where('is_active', true)->orderBy('price_cents'),
         ]);
+
+        // Sélectionner automatiquement le premier tarif disponible
+        $activeTicketType = $event->ticketTypes->first();
+
+        if (!$activeTicketType) {
+            abort(404, 'Aucun tarif disponible pour le moment.');
+        }
 
         return view('public.reservations.create', [
             'event' => $event,
+            'activeTicketType' => $activeTicketType,
         ]);
     }
 
@@ -32,12 +59,33 @@ class PublicReservationController extends Controller
         abort_unless($event->status === 'published', 404);
 
         $data = $request->validated();
+        $now = now();
 
+        // Déterminer automatiquement le tarif disponible selon la période actuelle
+        // Si sales_starts_at et sales_ends_at sont null, le tarif est toujours disponible
         $ticketType = TicketType::query()
-            ->where('id', $data['ticket_type_id'])
             ->where('event_id', $event->id)
             ->where('is_active', true)
-            ->firstOrFail();
+            ->where(function ($query) use ($now) {
+                $query->where(function ($q) use ($now) {
+                    // Tarif avec période définie et dans la période actuelle
+                    $q->whereNotNull('sales_starts_at')
+                        ->whereNotNull('sales_ends_at')
+                        ->where('sales_starts_at', '<=', $now)
+                        ->where('sales_ends_at', '>=', $now);
+                })->orWhere(function ($q) {
+                    // Tarif sans période définie (toujours disponible)
+                    $q->whereNull('sales_starts_at')
+                        ->whereNull('sales_ends_at');
+                });
+            })
+            ->orderBy('sort_order')
+            ->orderBy('price_cents')
+            ->first();
+
+        if (!$ticketType) {
+            return back()->withErrors(['ticket_type' => 'Aucun tarif disponible pour le moment.'])->withInput();
+        }
 
         $quantity = (int) $data['quantity'];
         $attendees = $data['attendees'];
@@ -100,7 +148,7 @@ class PublicReservationController extends Controller
                 'total_cents' => $total,
                 'agreed_terms_at' => now(),
                 'metadata' => [
-                    'addons' => $addons->map(fn ($a) => ['id' => $a->id, 'code' => $a->code, 'name' => $a->name, 'price_cents' => $a->price_cents])->values()->all(),
+                    'addons' => $addons->map(fn($a) => ['id' => $a->id, 'code' => $a->code, 'name' => $a->name, 'price_cents' => $a->price_cents])->values()->all(),
                 ],
             ]);
 
@@ -122,7 +170,7 @@ class PublicReservationController extends Controller
             return $order->fresh(['tickets.ticketType', 'event']);
         });
 
-        return redirect()->route('public.orders.show', $order)->with('status', "Commande créée. Paiement requis pour activer les billets.");
+        return redirect()->route('public.orders.show', $order)->with('status', "Réservation enregistrée. Paiement requis pour activer les billets.");
     }
 
     public function show(Order $order)
@@ -138,7 +186,7 @@ class PublicReservationController extends Controller
     {
         for ($i = 0; $i < 5; $i++) {
             $candidate = 'WE-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
-            if (! Order::where('order_number', $candidate)->exists()) {
+            if (!Order::where('order_number', $candidate)->exists()) {
                 return $candidate;
             }
         }

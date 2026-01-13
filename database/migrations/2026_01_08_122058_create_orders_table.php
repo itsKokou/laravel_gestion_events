@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('customer_phone')->nullable();
 
             $table->string('status')->default('pending_payment'); // pending_payment|paid|cancelled|failed
-            $table->char('currency', 3)->default('XOF');
+            $table->char('currency', 3)->default('FCFA');
 
             $table->unsignedInteger('subtotal_cents')->default(0);
             $table->unsignedInteger('addons_total_cents')->default(0);

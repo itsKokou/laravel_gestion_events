@@ -16,7 +16,7 @@ class PaymentController extends Controller
     public function pay(Request $request, Order $order, InvoicePdfService $invoicePdf)
     {
         if ($order->status === 'paid') {
-            return redirect()->route('public.orders.show', $order)->with('status', 'Commande déjà payée.');
+            return redirect()->route('public.orders.show', $order)->with('status', 'Réservation déjà payée.');
         }
 
         $order->status = 'paid';
@@ -28,8 +28,20 @@ class PaymentController extends Controller
         // Envoi email SMTP (si configuré) + facture PDF en pièce jointe.
         $order->loadMissing(['event', 'tickets.ticketType']);
         $pdfBytes = $invoicePdf->render($order);
-        Mail::to($order->customer_email)->send(new OrderPaidMail($order, $pdfBytes));
+        
+        try {
+            Mail::to($order->customer_email)->send(new OrderPaidMail($order, $pdfBytes));
+        } catch (\Exception $e) {
+            // Log l'erreur mais ne bloque pas le paiement
+            \Log::error('Erreur envoi email confirmation réservation', [
+                'order_id' => $order->id,
+                'email' => $order->customer_email,
+                'error' => $e->getMessage(),
+            ]);
+            
+            // Optionnel : vous pouvez ajouter une notification à l'admin ici
+        }
 
-        return redirect()->route('public.orders.show', $order)->with('status', 'Paiement simulé : commande confirmée.');
+        return redirect()->route('public.orders.show', $order)->with('status', 'Paiement simulé : réservation confirmée.');
     }
 }

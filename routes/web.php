@@ -54,4 +54,5 @@ Route::middleware(['auth', 'role:admin,controller'])->prefix('scanner')->name('s
     Route::get('/', [ScannerController::class, 'home'])->name('home');
     Route::get('/{event:slug}', [ScannerController::class, 'scanPage'])->name('event');
     Route::post('/{event:slug}/scan', [ScannerController::class, 'scan'])->name('scan');
+    Route::get('/{event:slug}/scan/{token}', [ScannerController::class, 'scanFromUrl'])->name('scan.url');
 });

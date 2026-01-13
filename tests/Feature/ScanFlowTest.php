@@ -52,7 +52,7 @@ class ScanFlowTest extends TestCase
             'code' => 'normal',
             'name' => 'Tarif normal',
             'price_cents' => 1500_00,
-            'currency' => 'XOF',
+            'currency' => 'FCFA',
             'is_active' => true,
             'sort_order' => 0,
         ]);
@@ -62,7 +62,7 @@ class ScanFlowTest extends TestCase
             'order_number' => 'WE-20260108-ABCDEF',
             'customer_email' => 'client@example.test',
             'status' => 'paid',
-            'currency' => 'XOF',
+            'currency' => 'FCFA',
             'subtotal_cents' => 1500_00,
             'addons_total_cents' => 0,
             'total_cents' => 1500_00,

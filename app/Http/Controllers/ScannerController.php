@@ -16,6 +16,9 @@ class ScannerController extends Controller
             ->where('status', 'published')
             ->orderBy('starts_at')
             ->limit(25)
+            ->withCount(['tickets as present_count' => function ($query) {
+                $query->whereNotNull('checked_in_at');
+            }])
             ->get();
 
         return view('scanner.home', [
@@ -32,10 +35,22 @@ class ScannerController extends Controller
             ->whereNotNull('checked_in_at')
             ->count();
 
+        $autoScanToken = session('auto_scan_token');
+
         return view('scanner.event', [
             'event' => $event,
             'presentCount' => $presentCount,
+            'autoScanToken' => $autoScanToken,
         ]);
+    }
+
+    public function scanFromUrl(Event $event, string $token)
+    {
+        abort_unless($event->status === 'published', 404);
+
+        // Rediriger vers la page de scan avec le token pré-rempli et auto-scanné
+        return redirect()->route('scanner.event', $event)
+            ->with('auto_scan_token', $token);
     }
 
     public function scan(Request $request, Event $event)

@@ -25,7 +25,7 @@ class OrderPaidMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Confirmation de réservation — Commande {$this->order->order_number}",
+            subject: "Confirmation de réservation — Réservation {$this->order->order_number}",
         );
     }
 

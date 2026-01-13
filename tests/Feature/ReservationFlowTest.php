@@ -67,7 +67,7 @@ class ReservationFlowTest extends TestCase
             'code' => 'normal',
             'name' => 'Tarif normal',
             'price_cents' => 1500_00,
-            'currency' => 'XOF',
+            'currency' => 'FCFA',
             'is_active' => true,
             'sort_order' => 0,
         ]);

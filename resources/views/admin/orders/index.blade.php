@@ -11,7 +11,7 @@
                     style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">
                     Gestion</div>
                 <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px;">Réservations</h1>
-                <p class="muted" style="font-size: 16px;">Liste de toutes les commandes et réservations.</p>
+                <p class="muted" style="font-size: 16px;">Liste de toutes les réservations.</p>
             </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                 <a class="btn secondary" href="{{ route('admin.dashboard') }}" style="padding: 12px 20px;">Dashboard</a>
@@ -30,7 +30,7 @@
                             style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.05), rgba(245, 130, 32, 0.02)); border-bottom: 2px solid var(--we-border);">
                             <th
                                 style="padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 700; color: var(--we-text); text-transform: uppercase; letter-spacing: 0.5px;">
-                                Commande</th>
+                                Réservation</th>
                             <th
                                 style="padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 700; color: var(--we-text); text-transform: uppercase; letter-spacing: 0.5px;">
                                 Soirée</th>
@@ -130,7 +130,7 @@
             <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 12px;">Aucune réservation pour le moment</h3>
             <p class="muted"
                 style="font-size: 16px; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto;">
-                Les commandes et réservations apparaîtront ici une fois que vos soirées seront publiées et que les clients
+                Les réservations apparaîtront ici une fois que vos soirées seront publiées et que les clients
                 commenceront à réserver.
             </p>
             <a href="{{ route('admin.events.index') }}" class="btn secondary" style="padding: 14px 28px; font-size: 16px;">

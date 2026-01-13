@@ -29,21 +29,9 @@ class ControllerCredentialsNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable)
     {
-        $loginUrl = route('login');
-        $subject = $this->purpose === 'reset'
-            ? "Win’s Events — Réinitialisation du mot de passe"
-            : "Win’s Events — Accès contrôleur";
-
-        return (new MailMessage)
-            ->subject($subject)
-            ->greeting('Bonjour,')
-            ->line("Un accès contrôleur vous a été attribué sur Win’s Events.")
-            ->line("Email : {$notifiable->email}")
-            ->line("Mot de passe : {$this->plainPassword}")
-            ->action('Se connecter', $loginUrl)
-            ->line("Pour des raisons de sécurité, changez votre mot de passe dès votre première connexion.");
+        return (new \App\Mail\ControllerCredentialsMail($notifiable, $this->plainPassword, $this->purpose));
     }
 
     /**

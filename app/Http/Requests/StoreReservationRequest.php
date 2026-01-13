@@ -26,7 +26,6 @@ class StoreReservationRequest extends FormRequest
             'customer_email' => ['required', 'email:rfc'],
             'customer_phone' => ['nullable', 'string', 'max:30'],
 
-            'ticket_type_id' => ['required', 'integer', 'exists:ticket_types,id'],
             'quantity' => ['required', 'integer', 'min:1', 'max:10'],
 
             'addons' => ['array'],
