@@ -20,6 +20,8 @@ class OrderPaidMail extends Mailable
     public function __construct(
         public Order $order,
         private string $invoicePdfBytes,
+        /** @var array<int, array{filename: string, bytes: string}> */
+        private array $ticketPdfAttachments = [],
     ) {}
 
     public function envelope(): Envelope
@@ -44,10 +46,18 @@ class OrderPaidMail extends Mailable
      */
     public function attachments(): array
     {
-        return [
+        $attachments = [
             Attachment::fromData(fn () => $this->invoicePdfBytes, "facture-{$this->order->order_number}.pdf")
                 ->withMime('application/pdf'),
         ];
+
+        foreach ($this->ticketPdfAttachments as $ticketPdf) {
+            $filename = $ticketPdf['filename'];
+            $bytes = $ticketPdf['bytes'];
+            $attachments[] = Attachment::fromData(fn () => $bytes, $filename)
+                ->withMime('application/pdf');
+        }
+
+        return $attachments;
     }
 }
-

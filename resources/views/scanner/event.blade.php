@@ -1,106 +1,118 @@
-@extends('layouts.app')
+@extends('layouts.scanner')
 
 @section('title', 'Scanner · ' . $event->name)
 
 @section('content')
     <!-- Header -->
-    <div style="margin-bottom: 32px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
-            <div>
-                <div style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">Scanner</div>
-                <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px;">
-                    {{ $event->name }}
-                </h1>
-                <div class="muted" style="font-size: 16px;">
-                    {{ $event->starts_at->format('d/m/Y H:i') }} · {{ $event->venue_name }}
+    <div class="mb-6">
+        <a href="{{ route('scanner.home') }}"
+            class="mb-3 inline-flex text-sm font-semibold text-orange-50/90 no-underline hover:text-white">
+            ← Toutes les soirées
+        </a>
+        <p class="mb-2 text-xs font-bold uppercase tracking-wider text-orange-50/75">Scanner</p>
+        <h1 class="mb-3 text-3xl font-black leading-tight tracking-tight text-white sm:text-[28px]">
+            {{ $event->name }}
+        </h1>
+        <p class="mb-4 text-sm text-orange-50/85">
+            {{ $event->starts_at->format('d/m/Y H:i') }} · {{ $event->venue_name }}
+        </p>
+        
+        <!-- Statistiques mobiles -->
+        <div class="card" style="padding: 16px; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--we-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+                    Présents
+            </div>
+                <div style="display: flex; align-items: baseline; gap: 6px;">
+                    <span id="presentCount" style="font-weight: 900; font-size: 24px; color: var(--we-primary);">
+                        {{ $presentCount }}
+                    </span>
+                    <span class="muted" style="font-size: 16px;">/ {{ $event->capacity }}</span>
                 </div>
             </div>
-            <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-                <div class="card" style="padding: 20px; min-width: 160px;">
-                    <div style="font-size: 12px; font-weight: 700; color: var(--we-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-                        Présents
-                    </div>
-                    <div style="display: flex; align-items: baseline; gap: 8px;">
-                        <span id="presentCount" style="font-weight: 900; font-size: 32px; color: var(--we-primary);">
-                            {{ $presentCount }}
-                        </span>
-                        <span class="muted" style="font-size: 18px;">/ {{ $event->capacity }}</span>
-                    </div>
-                    <div style="font-size: 12px; color: var(--we-muted); margin-top: 4px;">
-                        @php($percentage = $event->capacity > 0 ? round(($presentCount / $event->capacity) * 100) : 0)
-                        {{ $percentage }}% de capacité
-                    </div>
+            @if($event->capacity)
+                <div style="height: 8px; background: var(--we-primary-soft); border-radius: 999px; overflow: hidden; margin-bottom: 6px;">
+                    <div id="capacityBarMobile" style="height: 100%; background: linear-gradient(90deg, var(--we-gradient-start), var(--we-gradient-end)); border-radius: 999px; transition: width 0.3s ease; width: {{ $event->capacity > 0 ? ($presentCount / $event->capacity) * 100 : 0 }}%;"></div>
                 </div>
-            </div>
+                <div style="font-size: 11px; color: var(--we-muted); text-align: center;">
+                    @php($percentage = $event->capacity > 0 ? round(($presentCount / $event->capacity) * 100) : 0)
+                    {{ $percentage }}% de capacité
+                </div>
+            @endif
         </div>
     </div>
 
-    <div class="grid grid2" style="gap: 32px; margin-bottom: 32px;">
+    <div class="grid grid2" style="gap: 24px; margin-bottom: 24px;">
         <!-- Zone de scan -->
         <div style="flex: 1;">
             <!-- Scanner QR Code -->
-            <div class="card" style="padding: 32px; margin-bottom: 24px;">
-                <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 24px; letter-spacing: -0.3px;">📱 Scanner QR Code</h2>
+            <div class="card" style="padding: 24px; margin-bottom: 24px;">
+                <h2 style="font-size: 20px; font-weight: 900; margin-bottom: 20px; letter-spacing: -0.3px;">📱 Scanner QR Code</h2>
                 
                 <!-- Zone du scanner -->
-                <div id="scannerSection" style="margin-bottom: 24px;">
+                <div id="scannerSection" style="margin-bottom: 20px;">
+                    <div id="cameraErrorBanner" class="hidden mb-4 rounded-xl border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-200" role="alert"></div>
                     <div id="cameraContainer" style="display: none;">
-                        <div style="position: relative; width: 100%; max-width: 500px; margin: 0 auto; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <div style="position: relative; width: 100%; max-width: 100%; margin: 0 auto; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                             <div id="qr-reader" style="width: 100%; position: relative;"></div>
                         </div>
-                        <div style="text-align: center; margin-top: 20px;">
-                            <div style="font-size: 14px; color: var(--we-text); font-weight: 600; margin-bottom: 8px;">
+                        <div style="text-align: center; margin-top: 16px;">
+                            <div style="font-size: 13px; color: var(--we-text); font-weight: 600; margin-bottom: 12px;">
                                 Pointez la caméra vers le QR code du billet
                             </div>
-                            <button id="stopCameraBtn" class="btn secondary" type="button" style="padding: 12px 24px; font-size: 14px;">
-                                ⏹️ Arrêter le scanner
+                            <button id="stopCameraBtn" class="btn border border-red-600 bg-red-600 text-white shadow-sunset hover:shadow-lg hover:-translate-y-0.5 hover:bg-red-700 hover:to-red-800" type="button" style="padding: 12px 20px; font-size: 14px; width: 100%; max-width: 300px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" />
+                                </svg>
+                                Arrêter le scanner
                             </button>
                         </div>
                     </div>
 
-                    <div id="scannerPlaceholder" style="padding: 60px 40px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.05), rgba(245, 130, 32, 0.02)); border-radius: 16px; border: 2px dashed rgba(234, 88, 12, 0.3); text-align: center;">
-                        <div style="font-size: 64px; margin-bottom: 16px;">📷</div>
-                        <div style="font-size: 20px; font-weight: 700; color: var(--we-text); margin-bottom: 12px;">
+                    <div id="scannerPlaceholder" style="padding: 40px 24px; background: linear-gradient(135deg, var(--we-primary-soft), rgba(255, 255, 255, 0.5)); border-radius: 16px; border: 2px dashed color-mix(in srgb, var(--we-primary) 35%, transparent); text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 12px;">📷</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--we-text); margin-bottom: 8px;">
                             Scanner un billet
                         </div>
-                        <div style="font-size: 14px; color: var(--we-muted); margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        <div style="font-size: 13px; color: var(--we-muted); margin-bottom: 20px; line-height: 1.5;">
                             Activez votre caméra pour scanner automatiquement les QR codes des billets
                         </div>
-                        <button id="startScannerBtn" class="btn" type="button" style="padding: 14px 28px; font-size: 16px;">
-                            ▶️ Démarrer le scanner
+                        <button id="startScannerBtn" class="btn text-sm border border-orange-600 bg-orange-600 text-white shadow-sunset hover:shadow-lg hover:-translate-y-0.5 hover:bg-orange-700 hover:to-orange-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                            </svg>
+                            Démarrer le scanner
                         </button>
                     </div>
                 </div>
 
                 <!-- Saisie manuelle (optionnel) -->
-                <div style="padding-top: 24px; border-top: 2px solid var(--we-border);">
-                    <div style="font-size: 12px; font-weight: 700; color: var(--we-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center;">
+                <div style="padding-top: 20px; border-top: 2px solid var(--we-border);">
+                    <div style="font-size: 11px; font-weight: 700; color: var(--we-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center;">
                         Ou saisie manuelle
                     </div>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
-                        <div style="flex: 1; min-width: 200px;">
-                            <input id="qr_token" 
-                                placeholder="Collez le token QR ici…" 
-                                autocomplete="off"
-                                style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--we-border); background: #fff; color: var(--we-text); box-shadow: 0 1px 2px rgba(15,23,42,0.03); outline: none; transition: border-color 120ms ease, box-shadow 120ms ease; font-size: 14px; font-family: ui-monospace, monospace;"
-                                onfocus="this.style.borderColor='rgba(234, 88, 12, 0.55)'; this.style.boxShadow='0 0 0 4px var(--we-primary-soft)'"
-                                onblur="this.style.borderColor='var(--we-border)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.03)'" />
-                        </div>
-                        <div>
-                            <button class="btn" id="scanBtn" type="button" style="padding: 14px 24px; font-size: 14px;">
-                                Scanner
-                            </button>
-                        </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <input id="qr_token" 
+                            placeholder="Collez le token QR ici…" 
+                            autocomplete="off"
+                            style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--we-border); background: #fff; color: var(--we-text); box-shadow: 0 1px 2px rgba(15,23,42,0.03); outline: none; transition: border-color 120ms ease, box-shadow 120ms ease; font-size: 14px; font-family: ui-monospace, monospace;"
+                            onfocus="this.style.borderColor='color-mix(in srgb, var(--we-primary) 55%, #fff)'; this.style.boxShadow='0 0 0 4px var(--we-primary-soft)'"
+                            onblur="this.style.borderColor='var(--we-border)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.03)'" />
+                        <button class="btn" id="scanBtn" type="button" style="padding: 14px 24px; font-size: 14px; width: 100%;">
+                            Scanner
+                        </button>
                     </div>
                 </div>
-            </div>
+        </div>
 
             <!-- Pop-up de résultat du scan -->
-            <div id="resultModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
-                <div class="card" style="max-width: 500px; width: 100%; padding: 32px; position: relative; animation: slideIn 0.3s ease-out;">
-                    <button id="closeModalBtn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; color: #8b7355; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: background 120ms ease;" 
-                            onmouseover="this.style.background='rgba(0,0,0,0.05)'" 
-                            onmouseout="this.style.background='none'">
+            <div id="resultModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 16px; overflow-y: auto;">
+                <div class="card" style="max-width: 500px; width: 100%; padding: 24px; position: relative; animation: slideIn 0.3s ease-out; margin: auto;">
+                    <button id="closeModalBtn" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.05); border: none; font-size: 28px; color: #8b7355; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: background 120ms ease; z-index: 10;" 
+                            onmouseover="this.style.background='rgba(0,0,0,0.1)'" 
+                            onmouseout="this.style.background='rgba(0,0,0,0.05)'"
+                            ontouchstart="this.style.background='rgba(0,0,0,0.15)'"
+                            ontouchend="this.style.background='rgba(0,0,0,0.05)'">
                         ×
                     </button>
                     <div id="resultContent"></div>
@@ -121,10 +133,10 @@
             </style>
         </div>
 
-        <!-- Statistiques -->
-        <div style="flex: 0 0 380px;">
-            <div class="card" style="padding: 32px;">
-                <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 24px; letter-spacing: -0.3px;">Statistiques</h3>
+        <!-- Statistiques (masquées sur mobile) -->
+        <div style="flex: 0 0 380px;" class="stats-sidebar">
+            <div class="card" style="padding: 24px;">
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 20px; letter-spacing: -0.3px;">Statistiques</h3>
                 
                 <div style="display: flex; flex-direction: column; gap: 20px;">
                     <div>
@@ -132,7 +144,7 @@
                             Taux de remplissage
                         </div>
                         <div style="height: 12px; background: #f1f5f9; border-radius: 999px; overflow: hidden;">
-                            <div id="capacityBar" style="height: 100%; background: linear-gradient(90deg, var(--we-primary), rgba(245, 130, 32, 0.8)); border-radius: 999px; transition: width 0.3s ease; width: {{ $event->capacity > 0 ? ($presentCount / $event->capacity) * 100 : 0 }}%;"></div>
+                            <div id="capacityBar" style="height: 100%; background: linear-gradient(90deg, var(--we-gradient-start), var(--we-gradient-end)); border-radius: 999px; transition: width 0.3s ease; width: {{ $event->capacity > 0 ? ($presentCount / $event->capacity) * 100 : 0 }}%;"></div>
                         </div>
                         <div style="font-size: 14px; color: var(--we-text); margin-top: 8px;">
                             <span id="presentCountStat">{{ $presentCount }}</span> personnes présentes
@@ -160,7 +172,7 @@
         #qr-reader {
             position: relative;
             width: 100%;
-            min-height: 400px;
+            min-height: 300px;
         }
         
         #qr-reader video {
@@ -190,13 +202,103 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 250px;
-            height: 250px;
+            width: min(250px, 80vw);
+            height: min(250px, 80vw);
             border: 3px solid var(--we-primary);
             border-radius: 12px;
             pointer-events: none;
             z-index: 10;
             box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Responsive pour mobile */
+        @media (max-width: 768px) {
+            .grid2 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .stats-sidebar {
+                display: none !important;
+            }
+            
+            h1 {
+                font-size: 24px !important;
+            }
+            
+            .card {
+                padding: 20px 16px !important;
+            }
+            
+            #qr-reader {
+                min-height: 250px !important;
+            }
+            
+            #resultModal {
+                padding: 12px !important;
+                align-items: flex-start !important;
+                padding-top: 20px !important;
+            }
+            
+            #resultModal .card {
+                padding: 20px 16px !important;
+                max-width: 100% !important;
+            }
+            
+            #resultModal #resultContent > div:first-child {
+                flex-direction: column !important;
+                gap: 12px !important;
+            }
+            
+            #resultModal #resultContent > div:first-child > div:first-child {
+                width: 48px !important;
+                height: 48px !important;
+                font-size: 24px !important;
+            }
+            
+            #resultModal #resultContent > div:first-child > div:last-child > div:first-child {
+                font-size: 20px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px !important;
+            }
+            
+            h1 {
+                font-size: 22px !important;
+            }
+            
+            #qr-reader {
+                min-height: 200px !important;
+            }
+            
+            #scannerPlaceholder {
+                padding: 32px 20px !important;
+            }
+            
+            #scannerPlaceholder > div:first-child {
+                font-size: 48px !important;
+            }
+            
+            #scannerPlaceholder > div:nth-child(2) {
+                font-size: 18px !important;
+            }
+            
+            #resultModal {
+                padding: 8px !important;
+            }
+            
+            #resultModal .card {
+                padding: 16px 12px !important;
+            }
+        }
+        
+        /* Mode paysage mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            #qr-reader {
+                min-height: 300px !important;
+            }
         }
     </style>
 
@@ -210,6 +312,7 @@
         const presentCountStat = document.getElementById('presentCountStat');
         const remainingCount = document.getElementById('remainingCount');
         const capacityBar = document.getElementById('capacityBar');
+        const capacityBarMobile = document.getElementById('capacityBarMobile');
         const totalCapacity = {{ $event->capacity }};
         const startScannerBtn = document.getElementById('startScannerBtn');
         const stopCameraBtn = document.getElementById('stopCameraBtn');
@@ -223,7 +326,8 @@
             presentCountStat.textContent = newCount;
             remainingCount.textContent = Math.max(0, totalCapacity - newCount);
             const percentage = totalCapacity > 0 ? (newCount / totalCapacity) * 100 : 0;
-            capacityBar.style.width = percentage + '%';
+            if (capacityBar) capacityBar.style.width = percentage + '%';
+            if (capacityBarMobile) capacityBarMobile.style.width = percentage + '%';
         }
 
         function showResult(result, message, extra = {}) {
@@ -427,9 +531,17 @@
 
         // Gestion du scanner QR Code
         async function startScanner() {
+            const errBanner = document.getElementById('cameraErrorBanner');
+            if (errBanner) {
+                errBanner.classList.add('hidden');
+                errBanner.textContent = '';
+            }
             try {
                 startScannerBtn.disabled = true;
-                startScannerBtn.textContent = '⏳ Activation...';
+                startScannerBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                            </svg>
+                                            Activation...`;
                 
                 html5QrCode = new Html5Qrcode("qr-reader");
                 
@@ -466,10 +578,17 @@
                 cameraContainer.style.display = 'block';
                 scannerPlaceholder.style.display = 'none';
             } catch (err) {
-                alert('Impossible d\'accéder à la caméra. Veuillez vérifier les permissions de votre navigateur.');
                 console.error(err);
+                const banner = document.getElementById('cameraErrorBanner');
+                if (banner) {
+                    banner.textContent = 'Impossible d’accéder à la caméra. Vérifiez les permissions du navigateur ou utilisez la saisie manuelle du code.';
+                    banner.classList.remove('hidden');
+                }
                 startScannerBtn.disabled = false;
-                startScannerBtn.textContent = '▶️ Démarrer le scanner';
+                startScannerBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                                                    </svg>
+                                                                    Démarrer le scanner`;
             }
         }
 
@@ -483,7 +602,10 @@
                     cameraContainer.style.display = 'none';
                     scannerPlaceholder.style.display = 'block';
                     startScannerBtn.disabled = false;
-                    startScannerBtn.textContent = '▶️ Démarrer le scanner';
+                    startScannerBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                                                    </svg>
+                                                    Démarrer le scanner`;
                 } catch (err) {
                     console.error(err);
                 }

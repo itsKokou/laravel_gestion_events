@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Ticket;
 use App\Models\TicketType;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ReservationFlowTest extends TestCase
@@ -98,6 +98,11 @@ class ReservationFlowTest extends TestCase
         $order = Order::firstOrFail();
         $this->assertSame('pending_payment', $order->status);
         $this->assertNotEmpty($order->order_number);
+        $this->assertNotNull($order->expires_at);
+        $this->assertTrue($order->expires_at->isFuture());
+
+        $event->refresh();
+        $this->assertSame(1, $event->sold_tickets);
 
         $ticket = Ticket::firstOrFail();
         $this->assertSame($order->id, $ticket->order_id);
@@ -115,5 +120,57 @@ class ReservationFlowTest extends TestCase
         $qr = $this->get(route('tickets.qr', $ticket));
         $qr->assertOk();
         $this->assertStringContainsString('image/svg+xml', (string) $qr->headers->get('Content-Type'));
+    }
+
+    public function test_cannot_reserve_beyond_sold_tickets_capacity(): void
+    {
+        $event = Event::create([
+            'name' => 'Petite salle',
+            'slug' => 'petite-salle',
+            'starts_at' => now()->addDays(3),
+            'ends_at' => now()->addDays(3)->addHours(5),
+            'venue_name' => 'Club X',
+            'venue_address' => '1 rue de la Nuit',
+            'min_age' => 18,
+            'capacity' => 1,
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
+
+        TicketType::create([
+            'event_id' => $event->id,
+            'code' => 'normal',
+            'name' => 'Tarif normal',
+            'price_cents' => 1500_00,
+            'currency' => 'FCFA',
+            'is_active' => true,
+            'sort_order' => 0,
+        ]);
+
+        $payload = fn (string $email) => [
+            'customer_email' => $email,
+            'customer_phone' => '770000000',
+            'quantity' => 1,
+            'attendees' => [
+                [
+                    'first_name' => 'Awa',
+                    'last_name' => 'Diallo',
+                    'email' => 'awa@example.test',
+                    'phone' => null,
+                    'birthdate' => now()->subYears(25)->format('Y-m-d'),
+                ],
+            ],
+            'agree_terms' => '1',
+        ];
+
+        $this->post(route('public.reservations.store', $event), $payload('a@example.test'))
+            ->assertRedirect();
+
+        $this->post(route('public.reservations.store', $event), $payload('b@example.test'))
+            ->assertSessionHasErrors('quantity');
+
+        $this->assertDatabaseCount('orders', 1);
+        $event->refresh();
+        $this->assertSame(1, $event->sold_tickets);
     }
 }

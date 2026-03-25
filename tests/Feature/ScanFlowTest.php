@@ -2,13 +2,14 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Role;
 use App\Models\Ticket;
+use App\Models\TicketScan;
 use App\Models\TicketType;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -16,7 +17,7 @@ class ScanFlowTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsController(): void
+    private function actingAsController(): User
     {
         $controllerRole = Role::firstOrCreate(['slug' => 'controller'], ['name' => 'Contrôleur', 'slug' => 'controller']);
 
@@ -28,11 +29,13 @@ class ScanFlowTest extends TestCase
         $user->roles()->attach($controllerRole);
 
         $this->actingAs($user);
+
+        return $user;
     }
 
     public function test_scan_returns_valid_then_already_used(): void
     {
-        $this->actingAsController();
+        $controller = $this->actingAsController();
 
         $event = Event::create([
             'name' => 'Soirée Scan',
@@ -82,10 +85,17 @@ class ScanFlowTest extends TestCase
             'issued_at' => now(),
         ]);
 
+        $event->update(['sold_tickets' => 1]);
+
         $first = $this->postJson(route('scanner.scan', $event), ['qr_token' => $ticket->qr_token]);
         $first->assertOk()->assertJson([
             'result' => 'valid',
         ]);
+
+        $this->assertSame(
+            (string) $controller->id,
+            TicketScan::query()->where('result', 'valid')->latest('id')->value('scanner_id')
+        );
 
         $ticket->refresh();
         $this->assertNotNull($ticket->checked_in_at);

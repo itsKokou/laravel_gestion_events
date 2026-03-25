@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
@@ -19,6 +19,7 @@ class Order extends Model
         'addons_total_cents',
         'total_cents',
         'agreed_terms_at',
+        'expires_at',
         'payment_provider',
         'payment_reference',
         'paid_at',
@@ -31,6 +32,7 @@ class Order extends Model
         'addons_total_cents' => 'integer',
         'total_cents' => 'integer',
         'agreed_terms_at' => 'datetime',
+        'expires_at' => 'datetime',
         'paid_at' => 'datetime',
         'cancelled_at' => 'datetime',
         'metadata' => 'array',

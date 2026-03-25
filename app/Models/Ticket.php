@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
 {
@@ -48,5 +49,13 @@ class Ticket extends Model
     public function scans(): HasMany
     {
         return $this->hasMany(TicketScan::class);
+    }
+
+    /**
+     * Billets dont l’annulation admin / expiration n’a pas été appliquée.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->whereNull('cancelled_at');
     }
 }

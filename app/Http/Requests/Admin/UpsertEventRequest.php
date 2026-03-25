@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\TicketType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -36,9 +37,11 @@ class UpsertEventRequest extends FormRequest
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'hero_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'], // 5MB max
             'ticket_types' => ['required', 'array', 'min:1'],
+            'ticket_types.*.id' => ['nullable', 'integer'],
             'ticket_types.*.name' => ['required', 'string', 'max:160'],
             'ticket_types.*.price_cents' => ['required', 'integer', 'min:0'],
-            'ticket_types.*.currency' => ['required', 'string', 'size:3'],
+            // FCFA = 4 caractères ; codes ISO type XOF = 3
+            'ticket_types.*.currency' => ['required', 'string', 'max:16'],
             'ticket_types.*.quantity_limit' => ['nullable', 'integer', 'min:1'],
             'ticket_types.*.sales_starts_at' => ['required', 'date'],
             'ticket_types.*.sales_ends_at' => ['required', 'date'],
@@ -54,7 +57,23 @@ class UpsertEventRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $ticketTypes = $this->input('ticket_types', []);
-            $eventId = $this->route('event')?->id;
+
+            if ($event = $this->route('event')) {
+                foreach ($ticketTypes as $i => $row) {
+                    if (! empty($row['id'])) {
+                        $exists = TicketType::query()
+                            ->where('id', $row['id'])
+                            ->where('event_id', $event->id)
+                            ->exists();
+                        if (! $exists) {
+                            $validator->errors()->add(
+                                "ticket_types.{$i}.id",
+                                'Ce tarif ne correspond pas à cet événement.'
+                            );
+                        }
+                    }
+                }
+            }
 
             // Vérifier les doublons de nom et prix
             $names = [];
@@ -69,30 +88,30 @@ class UpsertEventRequest extends FormRequest
                     if ($endDate <= $startDate) {
                         $validator->errors()->add(
                             "ticket_types.{$index}.sales_ends_at",
-                            "La date de fin de vente doit être après la date de début de vente."
+                            'La date de fin de vente doit être après la date de début de vente.'
                         );
                     }
                 }
 
                 // Vérifier l'unicité du nom
-                if (!empty($ticketType['name'])) {
+                if (! empty($ticketType['name'])) {
                     $name = strtolower(trim($ticketType['name']));
                     if (isset($names[$name])) {
                         $validator->errors()->add(
                             "ticket_types.{$index}.name",
-                            "Ce nom de tarif est déjà utilisé pour un autre tarif."
+                            'Ce nom de tarif est déjà utilisé pour un autre tarif.'
                         );
                     }
                     $names[$name] = $index;
                 }
 
                 // Vérifier l'unicité du prix
-                if (!empty($ticketType['price_cents'])) {
+                if (! empty($ticketType['price_cents'])) {
                     $price = (int) $ticketType['price_cents'];
                     if (isset($prices[$price])) {
                         $validator->errors()->add(
                             "ticket_types.{$index}.price_cents",
-                            "Ce prix est déjà utilisé pour un autre tarif."
+                            'Ce prix est déjà utilisé pour un autre tarif.'
                         );
                     }
                     $prices[$price] = $index;

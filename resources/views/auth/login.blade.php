@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public')
 
 @section('title', 'Connexion · Win\'s Events')
 
@@ -81,7 +81,7 @@
                             type="checkbox" 
                             name="remember" 
                             value="1" 
-                            style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--we-primary);" 
+                            style="width: 15px; height: 15px; cursor: pointer; accent-color: var(--we-primary);" 
                             @checked(old('remember'))
                         />
                         <span class="muted" style="font-size: 14px; user-select: none;">Se souvenir de moi</span>
@@ -89,15 +89,16 @@
                 </div>
 
                 <!-- Bouton de connexion -->
-                <button 
-                    class="btn" 
-                    type="submit"
-                    style="width: 100%; font-size: 16px; padding: 16px; justify-content: center; font-weight: 700;"
-                    onmouseover="this.style.transform='translateY(-2px)'"
-                    onmouseout="this.style.transform='translateY(0)'"
-                >
-                    Se connecter
-                </button>
+                <div class="flex justify-center items-center">
+                    <button 
+                        class="btn btn-primary text-sm text-center px-20" 
+                        type="submit"
+                        onmouseover="this.style.transform='translateY(-2px)'"
+                        onmouseout="this.style.transform='translateY(0)'"
+                    >
+                        Se connecter
+                    </button>
+                </div>
             </form>
         </div>
 

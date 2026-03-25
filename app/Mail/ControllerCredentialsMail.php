@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -27,6 +28,12 @@ class ControllerCredentialsMail extends Mailable
 
         return new Envelope(
             subject: $subject,
+            to: [
+                new Address(
+                    (string) $this->user->email,
+                    filled($this->user->name) ? (string) $this->user->name : null,
+                ),
+            ],
         );
     }
 

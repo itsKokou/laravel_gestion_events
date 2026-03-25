@@ -3,12 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Support\Arr;
 use Symfony\Component\Process\Process;
 
 class InvoicePdfService
@@ -27,24 +22,9 @@ class InvoicePdfService
     {
         $order->loadMissing(['event', 'tickets.ticketType']);
 
-        $qrSvgs = [];
-        $writer = new SvgWriter();
-
-        foreach ($order->tickets as $ticket) {
-            $qrCode = new QrCode(
-                data: $ticket->qr_token,
-                encoding: new Encoding('UTF-8'),
-                errorCorrectionLevel: ErrorCorrectionLevel::Medium,
-                size: 220,
-                margin: 8,
-            );
-            $qrSvgs[$ticket->id] = $writer->write($qrCode)->getString();
-        }
-
         $html = $this->view->make('pdf.invoice', [
             'order' => $order,
             'event' => $order->event,
-            'qrSvgs' => $qrSvgs,
         ])->render();
 
         if (app()->bound('snappy.pdf.wrapper')) {
@@ -89,10 +69,9 @@ class InvoicePdfService
 
         if (! $process->isSuccessful()) {
             $err = trim($process->getErrorOutput() ?: $process->getOutput());
-            throw new \RuntimeException("wkhtmltopdf a échoué. Vérifie l'installation/chemin. Détail: " . ($err ?: 'inconnu'));
+            throw new \RuntimeException("wkhtmltopdf a échoué. Vérifie l'installation/chemin. Détail: ".($err ?: 'inconnu'));
         }
 
         return $process->getOutput();
     }
 }
-

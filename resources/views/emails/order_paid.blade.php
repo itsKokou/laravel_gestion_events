@@ -116,8 +116,8 @@
                             <!-- Informations importantes -->
                             <div style="background: rgba(251, 191, 36, 0.1); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 16px; margin: 24px 0;">
                                 <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.6;">
-                                    <strong>💡 Important :</strong> Vos billets avec QR codes sont disponibles sur la page de réservation. 
-                                    Présentez-les à l'entrée de l'événement. Votre facture PDF est jointe à cet email.
+                                    <strong>💡 Important :</strong> Vos billets individuels (avec QR code) et votre facture sont joints a cet email en PDF.
+                                    Vous pouvez egalement retrouver vos billets sur la page de reservation.
                                 </p>
                             </div>
                         </td>

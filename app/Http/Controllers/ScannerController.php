@@ -17,7 +17,8 @@ class ScannerController extends Controller
             ->orderBy('starts_at')
             ->limit(25)
             ->withCount(['tickets as present_count' => function ($query) {
-                $query->whereNotNull('checked_in_at');
+                $query->whereNotNull('tickets.checked_in_at')
+                    ->whereNull('tickets.cancelled_at');
             }])
             ->get();
 
@@ -33,6 +34,7 @@ class ScannerController extends Controller
         $presentCount = Ticket::query()
             ->where('event_id', $event->id)
             ->whereNotNull('checked_in_at')
+            ->whereNull('cancelled_at')
             ->count();
 
         $autoScanToken = session('auto_scan_token');
@@ -63,7 +65,9 @@ class ScannerController extends Controller
 
         $qrToken = $data['qr_token'];
 
-        return DB::transaction(function () use ($request, $event, $qrToken) {
+        $scannerKey = $this->scannerIdForRequest();
+
+        return DB::transaction(function () use ($request, $event, $qrToken, $scannerKey) {
             $ticket = Ticket::query()
                 ->where('qr_token', $qrToken)
                 ->lockForUpdate()
@@ -76,14 +80,14 @@ class ScannerController extends Controller
                     'qr_token' => $qrToken,
                     'result' => 'invalid',
                     'scanned_at' => now(),
-                    'scanner_id' => 'web',
+                    'scanner_id' => $scannerKey,
                     'ip_address' => $request->ip(),
                     'user_agent' => (string) $request->userAgent(),
                 ]);
 
                 return response()->json([
                     'result' => 'invalid',
-                    'message' => "QR code non reconnu.",
+                    'message' => 'QR code non reconnu.',
                 ], 404);
             }
 
@@ -96,14 +100,14 @@ class ScannerController extends Controller
                     'qr_token' => $qrToken,
                     'result' => 'invalid',
                     'scanned_at' => now(),
-                    'scanner_id' => 'web',
+                    'scanner_id' => $scannerKey,
                     'ip_address' => $request->ip(),
                     'user_agent' => (string) $request->userAgent(),
                 ]);
 
                 return response()->json([
                     'result' => 'invalid',
-                    'message' => "Billet non valide (annulé ou paiement non confirmé).",
+                    'message' => 'Billet non valide (annulé ou paiement non confirmé).',
                 ], 422);
             }
 
@@ -114,14 +118,14 @@ class ScannerController extends Controller
                     'qr_token' => $qrToken,
                     'result' => 'already_used',
                     'scanned_at' => now(),
-                    'scanner_id' => 'web',
+                    'scanner_id' => $scannerKey,
                     'ip_address' => $request->ip(),
                     'user_agent' => (string) $request->userAgent(),
                 ]);
 
                 return response()->json([
                     'result' => 'already_used',
-                    'message' => "Billet déjà scanné.",
+                    'message' => 'Billet déjà scanné.',
                     'checked_in_at' => $ticket->checked_in_at->toIso8601String(),
                     'attendee' => [
                         'name' => "{$ticket->attendee_first_name} {$ticket->attendee_last_name}",
@@ -139,7 +143,7 @@ class ScannerController extends Controller
                 'qr_token' => $qrToken,
                 'result' => 'valid',
                 'scanned_at' => now(),
-                'scanner_id' => 'web',
+                'scanner_id' => $scannerKey,
                 'ip_address' => $request->ip(),
                 'user_agent' => (string) $request->userAgent(),
             ]);
@@ -151,7 +155,7 @@ class ScannerController extends Controller
 
             return response()->json([
                 'result' => 'valid',
-                'message' => "Entrée autorisée.",
+                'message' => 'Entrée autorisée.',
                 'attendee' => [
                     'name' => "{$ticket->attendee_first_name} {$ticket->attendee_last_name}",
                     'email' => $ticket->attendee_email,
@@ -160,5 +164,15 @@ class ScannerController extends Controller
                 'capacity' => $event->capacity,
             ], 200);
         });
+    }
+
+    /**
+     * Identifiant pour l’audit des scans (utilisateur connecté ou contexte web).
+     */
+    private function scannerIdForRequest(): string
+    {
+        $id = auth()->id();
+
+        return $id !== null ? (string) $id : 'web';
     }
 }

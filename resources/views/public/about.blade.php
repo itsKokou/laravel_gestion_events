@@ -1,235 +1,240 @@
-@extends('layouts.app')
+@extends('layouts.public')
 
 @section('title', "À propos · Win's Events")
 
 @section('content')
-    <!-- Hero Section premium -->
-    <div style="margin-bottom: 48px;">
-        <div class="card" style="padding: 0; overflow: hidden; position: relative;">
-            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; min-height: 500px;">
-                <div style="padding: 64px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, rgba(234, 88, 12, 0.06) 0%, rgba(245, 130, 32, 0.02) 100%); position: relative;">
-                    <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--we-primary), var(--we-primary-hover));"></div>
-                    <div style="margin-bottom: 8px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">À propos de nous</div>
-                    <h1 style="font-size: 48px; font-weight: 900; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.5px;">
-                        Win's Events<br />
-                        <span style="color: var(--we-primary);">Organisateur de soirées à succès</span>
-                    </h1>
-                    <p style="font-size: 18px; line-height: 1.7; color: var(--we-muted); margin-bottom: 32px; max-width: 560px;">
-                        Depuis nos débuts, Win's Events conçoit et produit des soirées mémorables. Nous prenons en charge toute l'expérience — de la billetterie à l'accueil, en passant par la sécurité — pour que chaque soirée soit une réussite.
-                    </p>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <a href="{{ route('public.events.index') }}" class="btn">Découvrir nos soirées</a>
-                        <a href="#valeurs" class="btn secondary">Notre engagement</a>
+    <!-- Premium Hero Section -->
+    <div class="mb-16 md:mb-24 -mt-4 sm:-mt-8 bg-stone-950">
+        <div class="overflow-hidden border-0 p-0">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="relative flex flex-col justify-center p-12 lg:p-20 z-10">
+                    <div class="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-orange-600/5"></div>
+                    
+                    <div class="relative">
+                        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 backdrop-blur-md">
+                            <span class="text-xs font-bold uppercase tracking-[0.2em] text-orange-400">L'Art de Recevoir</span>
+                        </div>
+                        
+                        <h1 class="mb-8 text-5xl font-black leading-[1.05] tracking-tighter text-white sm:text-6xl">
+                            Win's Events<br />
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Créateur d'Instants.</span>
+                        </h1>
+                        
+                        <p class="mb-10 text-lg leading-relaxed text-stone-400 sm:text-xl max-w-lg">
+                            Depuis nos débuts, nous concevons des soirées mémorables. De la billetterie fluide à l'accueil premium, nous orchestrons chaque détail pour que l'expérience soit absolue.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <a href="{{ route('public.events.index') }}" class="btn-primary px-8 py-3.5 shadow-sunset">
+                                Découvrir l'agenda
+                            </a>
+                            <a href="#valeurs" class="btn-glass px-8 py-3.5 rounded-2xl">
+                                Notre vision
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div style="position: relative; background: #f5f5f5; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                    <img id="hero-image" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80" alt="Soirée Win's Events" style="width: 100%; height: 100%; object-fit: cover;" />
-                    <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 100%);"></div>
+                
+                <div class="relative hidden lg:block bg-stone-900 overflow-hidden">
+                    <img id="hero-image" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1000&q=80" alt="Ambiance Soirée" class="h-full w-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal hover:scale-105 transition-all duration-1000" />
+                    <div class="absolute inset-0 bg-gradient-to-l from-transparent via-stone-950/40 to-stone-950"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Section Notre histoire -->
-    <section style="margin-bottom: 48px;">
-        <div class="card" style="padding: 48px;">
-            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                <div style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">Notre histoire</div>
-                <h2 style="font-size: 36px; font-weight: 900; margin-bottom: 24px; letter-spacing: -0.5px;">Une passion pour créer des moments inoubliables</h2>
-                <p style="font-size: 18px; line-height: 1.8; color: var(--we-muted); margin-bottom: 24px;">
-                    Win's Events est né d'une vision simple : rendre l'organisation et la participation aux soirées exceptionnelles accessibles à tous. Nous combinons expertise technique, créativité et attention aux détails pour transformer chaque événement en une expérience mémorable.
-                </p>
-                <p style="font-size: 16px; line-height: 1.7; color: var(--we-muted);">
-                    Notre plateforme innovante permet aux organisateurs de gérer facilement leurs événements, tandis que les participants bénéficient d'un processus de réservation fluide et sécurisé, de la commande à l'entrée en soirée.
-                </p>
-            </div>
-        </div>
-    </section>
+    <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
 
-    <!-- Valeurs / Avantages avec design premium -->
-    <section id="valeurs" style="margin-bottom: 48px;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <div style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">Notre engagement</div>
-            <h2 style="font-size: 36px; font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px;">Ce qui nous distingue</h2>
-            <p class="muted" style="font-size: 18px; max-width: 700px; margin: 0 auto;">
-                Win's Events conçoit chaque soirée pour qu'elle marque les esprits. Nous combinons créativité, logistique irréprochable et souci du détail pour offrir des expériences qui rassemblent.
+    <!-- Editorial Story Section -->
+    <section class="mb-24 lg:mb-32">
+        <div class="mx-auto max-w-3xl text-center px-4">
+            <p class="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-orange-600">Notre Histoire</p>
+            <h2 class="mb-8 text-4xl font-black tracking-tighter text-stone-900 sm:text-5xl">La passion pour l'inoubliable.</h2>
+            <p class="text-xl font-medium leading-relaxed text-stone-500 mb-6">
+                Win's Events est né d'une vision simple : élever le standard des soirées festives. Nous croyons que la magie d'un événement commence bien avant d'y entrer, dès l'achat du billet.
+            </p>
+            <p class="text-lg leading-relaxed text-stone-400">
+                Aujourd'hui, nous combinons une technologie de billetterie de pointe avec une organisation sans faille pour que les créateurs de soirées se concentrent sur l'ambiance, et les invités sur l'instant présent.
             </p>
         </div>
+    </section>
 
-        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
-            <div class="card" style="padding: 32px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(15,23,42,0.12)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.04), 0 12px 30px rgba(15,23,42,0.06)'">
-                <div style="width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.1), rgba(245, 130, 32, 0.05)); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 32px;">🎉</div>
-                <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.3px;">Conception & production</h3>
-                <p class="muted" style="line-height: 1.7; font-size: 15px;">
-                    Du concept à la scène, nous orchestrons chaque étape pour créer des ambiances uniques et mémorables qui marquent les esprits.
+    <!-- Bento Values Section -->
+    <section id="valeurs" class="mb-24 lg:mb-32">
+        <div class="mb-16 text-center">
+            <p class="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-orange-600">L'Engagement</p>
+            <h2 class="text-4xl font-black tracking-tighter text-stone-900 sm:text-5xl">Ce qui nous distingue</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="card-premium group relative overflow-hidden p-10 bg-white">
+                <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-500">
+                    <span class="text-9xl">🎉</span>
+                </div>
+                <div class="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-orange-50/80 text-3xl shadow-inner group-hover:bg-orange-100/80 transition-colors">
+                    ✨
+                </div>
+                <h3 class="mb-4 text-2xl font-black text-stone-900 group-hover:text-orange-600 transition-colors">Production</h3>
+                <p class="text-base font-medium leading-relaxed text-stone-500 relative z-10">
+                    Du concept à la scène, nous orchestrons chaque étape pour créer des ambiances uniques qui marquent les esprits.
                 </p>
             </div>
-            <div class="card" style="padding: 32px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(15,23,42,0.12)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.04), 0 12px 30px rgba(15,23,42,0.06)'">
-                <div style="width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.1), rgba(245, 130, 32, 0.05)); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 32px;">🎫</div>
-                <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.3px;">Billetterie & accueil</h3>
-                <p class="muted" style="line-height: 1.7; font-size: 15px;">
-                    Accueil optimisé et billetterie fluide pour une expérience invitée sans friction, de la réservation à l'entrée en toute simplicité.
+            
+            <div class="card-premium group relative overflow-hidden p-10 bg-white">
+                <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-500">
+                    <span class="text-9xl">⚡</span>
+                </div>
+                <div class="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-orange-50/80 text-3xl shadow-inner group-hover:bg-orange-100/80 transition-colors">
+                    🎟️
+                </div>
+                <h3 class="mb-4 text-2xl font-black text-stone-900 group-hover:text-orange-600 transition-colors">Billetterie</h3>
+                <p class="text-base font-medium leading-relaxed text-stone-500 relative z-10">
+                    Un parcours d'achat sans friction. Réservation instantanée, QR code sécurisé, et entrée express. L'attente appartient au passé.
                 </p>
             </div>
-            <div class="card" style="padding: 32px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(15,23,42,0.12)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.04), 0 12px 30px rgba(15,23,42,0.06)'">
-                <div style="width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.1), rgba(245, 130, 32, 0.05)); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 32px;">🛡️</div>
-                <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.3px;">Sécurité & logistique</h3>
-                <p class="muted" style="line-height: 1.7; font-size: 15px;">
-                    Des procédures claires et des équipes formées pour garantir le bon déroulement et la sécurité de tous les participants.
+            
+            <div class="card-premium group relative overflow-hidden p-10 bg-white">
+                <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-500">
+                    <span class="text-9xl">🛡️</span>
+                </div>
+                <div class="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-orange-50/80 text-3xl shadow-inner group-hover:bg-orange-100/80 transition-colors">
+                    🛡️
+                </div>
+                <h3 class="mb-4 text-2xl font-black text-stone-900 group-hover:text-orange-600 transition-colors">Logistique</h3>
+                <p class="text-base font-medium leading-relaxed text-stone-500 relative z-10">
+                    Une sécurité intransigeante et un accueil irréprochable. Laissez-vous porter par la musique en toute sérénité.
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Statistiques avec design premium -->
-    <section style="margin-bottom: 48px;">
-        <div class="card" style="padding: 48px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.03) 0%, rgba(245, 130, 32, 0.01) 100%);">
-            <div style="text-align: center; margin-bottom: 40px;">
-                <div style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">Nos résultats</div>
-                <h3 style="font-size: 32px; font-weight: 900; letter-spacing: -0.5px;">Quelques chiffres qui parlent</h3>
-            </div>
-            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; text-align: center;">
-                <div>
-                    <div style="font-size: 56px; font-weight: 900; color: var(--we-primary); margin-bottom: 12px; line-height: 1;">+120</div>
-                    <div class="muted" style="font-size: 15px; font-weight: 600;">Soirées organisées</div>
+    <!-- Stats Section -->
+    <section class="mb-24 lg:mb-32">
+        <div class="card-premium relative overflow-hidden border-orange-100 bg-gradient-to-br from-white to-orange-50/30 p-12 lg:p-20 text-center">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-12">
+                <div class="flex flex-col items-center justify-center">
+                    <p class="text-5xl font-black text-orange-500 mb-2">120<span class="text-3xl">+</span></p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-stone-500">Soirées Épiques</p>
                 </div>
-                <div>
-                    <div style="font-size: 56px; font-weight: 900; color: var(--we-primary); margin-bottom: 12px; line-height: 1;">+8k</div>
-                    <div class="muted" style="font-size: 15px; font-weight: 600;">Billets vendus</div>
+                <div class="flex flex-col items-center justify-center border-l-0 lg:border-l border-stone-200/50">
+                    <p class="text-5xl font-black text-orange-500 mb-2">8k<span class="text-3xl">+</span></p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-stone-500">Billets Scannés</p>
                 </div>
-                <div>
-                    <div style="font-size: 56px; font-weight: 900; color: var(--we-primary); margin-bottom: 12px; line-height: 1;">4.9/5</div>
-                    <div class="muted" style="font-size: 15px; font-weight: 600;">Satisfaction client</div>
+                <div class="flex flex-col items-center justify-center border-l-0 lg:border-l border-stone-200/50">
+                    <p class="text-5xl font-black text-orange-500 mb-2">4.9</p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-stone-500">Note Globale</p>
                 </div>
-                <div>
-                    <div style="font-size: 56px; font-weight: 900; color: var(--we-primary); margin-bottom: 12px; line-height: 1;">98%</div>
-                    <div class="muted" style="font-size: 15px; font-weight: 600;">Taux de présence</div>
+                <div class="flex flex-col items-center justify-center border-l-0 lg:border-l border-stone-200/50">
+                    <p class="text-5xl font-black text-orange-500 mb-2">98<span class="text-3xl">%</span></p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-stone-500">Taux de Présence</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Témoignages avec design premium -->
-    <section style="margin-bottom: 48px;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <div style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">Témoignages</div>
-            <h3 style="font-size: 32px; font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px;">Ils nous ont fait confiance</h3>
-            <p class="muted" style="font-size: 18px;">Découvrez ce que nos clients et partenaires disent de Win's Events.</p>
+    <!-- Testimonials Section -->
+    <section class="mb-24 lg:mb-32">
+        <div class="mb-16 text-center">
+            <p class="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-orange-600">Avis</p>
+            <h2 class="text-4xl font-black tracking-tighter text-stone-900 sm:text-5xl">Ceux qui le disent le mieux</h2>
         </div>
 
-        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-            <div class="card" style="padding: 32px; position: relative;">
-                <div style="position: absolute; top: 24px; right: 24px; font-size: 48px; opacity: 0.1;">"</div>
-                <blockquote style="font-size: 17px; line-height: 1.7; margin-bottom: 24px; font-style: italic; color: #334155; position: relative; z-index: 1;">
-                    "Win's Events a simplifié l'organisation de nos soirées — paiement et contrôle, tout marche parfaitement. Une plateforme vraiment professionnelle qui nous fait gagner un temps précieux."
-                </blockquote>
-                <div style="display: flex; align-items: center; gap: 16px; padding-top: 20px; border-top: 1px solid var(--we-border);">
-                    <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--we-primary), var(--we-primary-hover)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 20px; flex-shrink: 0;">J</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="card-premium p-10 bg-white relative">
+                <span class="absolute top-8 right-8 text-6xl text-stone-100 font-serif leading-none">"</span>
+                <p class="relative z-10 text-xl font-medium leading-relaxed text-stone-600 italic mb-10">
+                    Mettre en place la billetterie a pris 5 minutes. Le soir venu, les scans étaient instantanés. Plus jamais je ne passerai par une autre plateforme pour mes événements.
+                </p>
+                <div class="flex items-center gap-4 border-t border-stone-100 pt-6">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 text-orange-600 font-black text-xl">J</div>
                     <div>
-                        <div style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">Julien</div>
-                        <div class="muted" style="font-size: 14px;">Organisateur d'événements</div>
+                        <p class="text-base font-bold text-stone-900">Julien M.</p>
+                        <p class="text-sm font-medium text-stone-500">Organisateur Indépendant</p>
                     </div>
                 </div>
             </div>
-            <div class="card" style="padding: 32px; position: relative;">
-                <div style="position: absolute; top: 24px; right: 24px; font-size: 48px; opacity: 0.1;">"</div>
-                <blockquote style="font-size: 17px; line-height: 1.7; margin-bottom: 24px; font-style: italic; color: #334155; position: relative; z-index: 1;">
-                    "Très simple d'utilisation, le support est réactif et fiable. J'ai réservé mes billets en quelques minutes et tout s'est passé à merveille le jour J. Une expérience vraiment fluide."
-                </blockquote>
-                <div style="display: flex; align-items: center; gap: 16px; padding-top: 20px; border-top: 1px solid var(--we-border);">
-                    <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--we-primary), var(--we-primary-hover)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 20px; flex-shrink: 0;">C</div>
+            
+            <div class="card-premium p-10 bg-white relative">
+                <span class="absolute top-8 right-8 text-6xl text-stone-100 font-serif leading-none">"</span>
+                <p class="relative z-10 text-xl font-medium leading-relaxed text-stone-600 italic mb-10">
+                    Habituellement je déteste acheter des places et faire la queue. Win's Events a rendu le process tellement premium que je réserve maintenant les yeux fermés.
+                </p>
+                <div class="flex items-center gap-4 border-t border-stone-100 pt-6">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 text-orange-600 font-black text-xl">C</div>
                     <div>
-                        <div style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">Clara</div>
-                        <div class="muted" style="font-size: 14px;">Participante régulière</div>
+                        <p class="text-base font-bold text-stone-900">Clara P.</p>
+                        <p class="text-sm font-medium text-stone-500">Habituée des soirées</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Galerie d'images avec design premium -->
-    <section style="margin-bottom: 48px;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <div style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">Galerie</div>
-            <h3 style="font-size: 32px; font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px;">Ambiance en images</h3>
-            <p class="muted" style="font-size: 18px;">Quelques moments capturés lors de nos soirées exceptionnelles.</p>
+    <!-- Visual Gallery Section -->
+    <section class="mb-24 lg:mb-32 w-full full-width">
+        <div class="mb-16 text-center">
+            <p class="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-orange-600">Galerie</p>
+            <h2 class="text-4xl font-black tracking-tighter text-stone-900 sm:text-5xl">Ambiance visuelle</h2>
         </div>
 
-        <div id="gallery-container" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
-            <!-- Les images seront chargées dynamiquement via JavaScript -->
+        <div id="gallery-container" class="grid grid-cols-2 md:grid-cols-3 gap-6 auto-rows-[250px] lg:auto-rows-[300px]">
+            <!-- JS loaded images -->
         </div>
     </section>
 
-    <!-- CTA Final premium -->
-    <div class="card" style="text-align: center; padding: 64px 32px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.05) 0%, rgba(245, 130, 32, 0.02) 100%); position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 4px; background: linear-gradient(90deg, transparent, var(--we-primary), transparent);"></div>
-        <h3 style="font-size: 40px; font-weight: 900; margin-bottom: 20px; letter-spacing: -0.5px;">Prêt à découvrir des soirées près de chez vous ?</h3>
-        <p class="muted" style="font-size: 18px; margin-bottom: 32px; max-width: 650px; margin-left: auto; margin-right: auto; line-height: 1.7;">
-            Rejoignez notre communauté et réservez votre place pour les prochaines soirées exceptionnelles. L'aventure commence ici.
-        </p>
-        <a href="{{ route('public.events.index') }}" class="btn" style="font-size: 17px; padding: 16px 32px;">Voir les soirées à venir</a>
+    <!-- Final CTA -->
+    <section class="mb-16">
+        <div class="card-premium overflow-hidden bg-gradient-to-br from-stone-900 to-stone-950 p-12 text-center shadow-xl sm:p-20 relative">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1600&q=80')] opacity-10 bg-cover bg-center mix-blend-screen"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/80 to-stone-900/20"></div>
+            
+            <div class="relative z-10 flex flex-col items-center">
+                <h2 class="mb-6 text-4xl font-black tracking-tighter text-white sm:text-5xl">Prêt pour l'expérience ?</h2>
+                <p class="mb-10 max-w-2xl text-lg font-medium text-stone-400">
+                    Rejoignez les milliers de passionnés et accédez aux meilleures ambiances dès maintenant.
+                </p>
+                <a href="{{ route('public.events.index') }}" class="btn-primary px-10 py-4 text-lg shadow-sunset rounded-full">
+                    Parcourir l'agenda
+                    <svg class="h-5 w-5 inline ml-2" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        </div>
+    </section>
+
     </div>
 
     <script>
-        // Images par défaut
         const defaultImages = [
-            { url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80', alt: 'Soirée dansante avec lumières' },
-            { url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80', alt: 'Public en soirée sur la piste' },
-            { url: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80', alt: 'DJ et public' },
-            { url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80', alt: 'Foule en soirée' },
-            { url: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80', alt: 'Ambiance festive' },
-            { url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80', alt: 'Concert en soirée' },
+            { url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80', alt: 'Soirée' },
+            { url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80', alt: 'Public' },
+            { url: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80', alt: 'DJ' },
+            { url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80', alt: 'Foule' },
+            { url: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80', alt: 'Ambiance' },
+            { url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80', alt: 'Concert' },
         ];
 
-        // Afficher la galerie (lecture seule pour les clients)
         function renderGallery(images) {
             const container = document.getElementById('gallery-container');
             if (!container) return;
 
-            container.innerHTML = images.map((img) => `
-                <div class="card" style="padding: 0; overflow: hidden; position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease;" 
-                     onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 20px 40px rgba(15,23,42,0.15)'"
-                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.04), 0 12px 30px rgba(15,23,42,0.06)'">
-                    <img src="${img.url}" alt="${img.alt || 'Image de soirée'}" 
-                         style="width: 100%; height: 300px; object-fit: cover; display: block; transition: transform 0.5s ease;" 
-                         loading="lazy"
-                         onmouseover="this.style.transform='scale(1.1)'"
-                         onmouseout="this.style.transform='scale(1)'" />
+            container.innerHTML = images.map((img, i) => `
+                <div class="group relative overflow-hidden rounded-3xl shadow-sm hover:shadow-xl transition-shadow duration-300 ${i === 0 || i === 3 ? 'md:col-span-2' : ''}">
+                    <img src="${img.url}" alt="${img.alt}" 
+                         class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                         loading="lazy" />
+                    <div class="absolute inset-0 bg-stone-900/10 transition-opacity duration-300 group-hover:opacity-0"></div>
                 </div>
             `).join('');
         }
 
-        // Charger l'image hero sauvegardée (si admin l'a modifiée)
-        function loadHeroImage() {
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGallery(defaultImages);
             const saved = localStorage.getItem('wins-events-hero-image');
             const heroImg = document.getElementById('hero-image');
-            if (saved && heroImg) {
-                heroImg.src = saved;
-            }
-        }
-
-        // Initialisation au chargement de la page
-        document.addEventListener('DOMContentLoaded', function() {
-            renderGallery(defaultImages);
-            loadHeroImage();
+            if (saved && heroImg) heroImg.src = saved;
         });
     </script>
-
-    <style>
-        @media (max-width: 768px) {
-            .card[style*="grid-template-columns: 1.2fr 1fr"] > div:first-child {
-                padding: 32px 24px !important;
-            }
-            .card[style*="grid-template-columns: 1.2fr 1fr"] {
-                grid-template-columns: 1fr !important;
-                min-height: auto !important;
-            }
-            h1[style*="font-size: 48px"] {
-                font-size: 32px !important;
-            }
-            h2[style*="font-size: 36px"], h3[style*="font-size: 32px"] {
-                font-size: 28px !important;
-            }
-        }
-    </style>
 @endsection

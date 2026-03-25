@@ -8,25 +8,31 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --shadow-sunset: 0 10px 25px -5px rgba(234, 88, 12, 0.25), 0 8px 10px -6px rgba(234, 88, 12, 0.1);
+    --shadow-premium: 0 10px 40px -10px rgba(0,0,0,0.08);
+    --shadow-premium-hover: 0 20px 40px -10px rgba(0,0,0,0.12);
+    --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
-
-/* --------------------------------------------------------------------------
-   Win's Events – UI (fond clair, moderne)
-   Ces classes sont utilisées dans les vues Blade (.card, .btn, etc.)
-   -------------------------------------------------------------------------- */
 
 @layer base {
     :root {
-        --we-bg: #faf8f6; /* warm off-white */
-        --we-text: #1f1b18; /* dark warm */
-        --we-muted: #8b7355; /* warm muted */
-        --we-border: #f0e8e0; /* warm light border */
+        --we-bg: #fdfcfb; /* warmer light sand */
+        --we-text: #1c1917; /* charcoal */
+        --we-muted: #78716c; /* warm muted stone */
+        --we-border: #f5f5f4; /* lighter border */
         --we-card: #ffffff;
 
-        /* Accent Orange */
-        --we-primary: #ea580c; /* orange-600 */
-        --we-primary-hover: #d64407; /* orange-700 */
+        /* Sunset Orange */
+        --we-primary: #ea580c; 
+        --we-primary-hover: #c2410c;
         --we-primary-soft: rgba(234, 88, 12, 0.12);
+        
+        --we-gradient-start: #f97316;
+        --we-gradient-end: #ea580c;
+    }
+
+    html {
+        scroll-behavior: smooth;
     }
 
     html, body {
@@ -35,133 +41,145 @@
 
     body {
         font-family: var(--font-sans);
-        background: radial-gradient(900px 500px at 10% 0%, rgba(234, 88, 12, 0.08), transparent 60%),
-                    radial-gradient(900px 500px at 90% 20%, rgba(245, 130, 32, 0.08), transparent 55%),
-                    var(--we-bg);
+        background-color: var(--we-bg);
         color: var(--we-text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     a {
         color: inherit;
     }
+
+    /* Scanner (layout terracotta) : accents alignés sur le fond #af5c41, texte des cartes inchangé */
+    .scanner-theme {
+        --we-primary: #af5c41;
+        --we-primary-hover: #9d5038;
+        --we-primary-soft: rgba(175, 92, 65, 0.18);
+        --we-gradient-start: #c96b4f;
+        --we-gradient-end: #af5c41;
+    }
+
+    .scanner-theme .card {
+        color: var(--we-text);
+    }
 }
 
 @layer components {
     .container {
-        max-width: 1120px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 24px;
+        padding: 0 24px;
     }
 
     .muted {
         color: var(--we-muted);
     }
 
-    .error {
-        color: #b91c1c; /* red-700 */
-    }
-
-    .grid {
-        display: grid;
-        gap: 12px;
-    }
-
-    .grid2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .card {
-        background: var(--we-card);
-        border: 1px solid var(--we-border);
-        border-radius: 16px;
-        padding: 16px;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 30px rgba(15, 23, 42, 0.06);
+    .glass-panel {
+        @apply bg-white/80 backdrop-blur-md border border-white/40 shadow-glass;
     }
 
     .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 10px 14px;
-        border-radius: 12px;
-        background: var(--we-primary);
-        border: 1px solid rgba(234, 88, 12, 0.22);
-        color: #fff;
-        text-decoration: none;
-        font-weight: 400;
-        letter-spacing: 0.1px;
-        transition: transform 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
-        box-shadow: 0 10px 18px rgba(234, 88, 12, 0.18);
+        @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-semibold transition-all duration-300;
         cursor: pointer;
         user-select: none;
     }
 
-    .btn:hover {
-        background: var(--we-primary-hover);
-        transform: translateY(-1px);
+    .btn-primary {
+        @apply rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-sunset hover:shadow-lg hover:-translate-y-0.5 hover:from-orange-600 hover:to-orange-700;
+        border: 1px solid rgba(234, 88, 12, 0.1);
     }
 
-    .btn:active {
-        transform: translateY(0);
+    .btn-secondary {
+        @apply rounded-full bg-white text-stone-800 border border-stone-200 shadow-sm hover:bg-stone-50 hover:-translate-y-0.5 hover:shadow-md;
+    }
+    
+    .btn-glass {
+        @apply rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 hover:bg-white/30 hover:-translate-y-0.5;
     }
 
-    .btn.secondary {
-        background: #fff;
-        color: var(--we-text);
-        border: 1px solid var(--we-border);
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    .form-input {
+        @apply w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 shadow-sm transition-all duration-200 placeholder-stone-400 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:outline-none;
+    }
+    
+    .card-premium {
+        @apply bg-white rounded-3xl border border-stone-100 shadow-premium transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 overflow-hidden;
     }
 
-    .btn.secondary:hover {
-        background: #f1f5f9; /* slate-100 */
-        transform: translateY(-1px);
+    /* Aliases pour harmoniser la page "Commande" (resources/views/public/orders/show.blade.php) */
+    .card {
+        @apply bg-white rounded-3xl border border-stone-100 shadow-premium transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 overflow-hidden;
     }
 
-    input, select, textarea {
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 12px;
-        border: 1px solid var(--we-border);
-        background: #ffffff;
-        color: var(--we-text);
-        outline: none;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
-        transition: border-color 120ms ease, box-shadow 120ms ease;
+    .secondary {
+        @apply rounded-full bg-white text-stone-800 border border-stone-200 shadow-sm hover:bg-stone-50 hover:-translate-y-0.5 hover:shadow-md;
     }
 
-    input::placeholder, textarea::placeholder {
-        color: #94a3b8; /* slate-400 */
+    /* Support de l'ancien layout "grid2" (2 colonnes au desktop) */
+    .grid2 {
+        grid-template-columns: 1fr;
+    }
+    @media (min-width: 1024px) {
+        .grid2 {
+            grid-template-columns: 1fr 380px;
+        }
     }
 
-    input:focus, select:focus, textarea:focus {
-        border-color: rgba(234, 88, 12, 0.55);
-        box-shadow: 0 0 0 4px var(--we-primary-soft);
+    /* Backdrop du modal "Ajouter un participant" (évite les soucis de classes Tailwind bg-black/60) */
+    .attendee-modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* Collage « expérience » : halo animé (respect prefers-reduced-motion via durée 0) */
+@layer utilities {
+    @keyframes experience-glow-pulse {
+        0%,
+        100% {
+            opacity: 0.45;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.85;
+            transform: scale(1.08);
+        }
     }
 
-    label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #334155; /* slate-700 */
+    @keyframes experience-shimmer {
+        0% {
+            background-position: 0% 50%;
+        }
+        100% {
+            background-position: 200% 50%;
+        }
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
+    .animate-experience-glow {
+        animation: experience-glow-pulse 6s ease-in-out infinite;
     }
 
-    th, td {
-        padding: 10px 12px;
-        border-bottom: 1px solid var(--we-border);
-        vertical-align: top;
+    .animate-experience-shimmer {
+        background: linear-gradient(
+            125deg,
+            transparent 35%,
+            rgba(255, 255, 255, 0.45) 48%,
+            rgba(255, 237, 213, 0.35) 52%,
+            transparent 65%
+        );
+        background-size: 220% 220%;
+        animation: experience-shimmer 3.2s ease-in-out infinite;
     }
 
-    th {
-        text-align: left;
-        font-weight: 800;
-        color: #334155; /* slate-700 */
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
+    @media (prefers-reduced-motion: reduce) {
+        .animate-experience-glow {
+            animation: none;
+            opacity: 0.55;
+        }
+
+        .animate-experience-shimmer {
+            animation: none;
+            opacity: 0;
+        }
     }
 }

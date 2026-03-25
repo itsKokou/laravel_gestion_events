@@ -41,10 +41,6 @@
             page-break-inside: avoid;
         }
 
-        .qr-container {
-            page-break-inside: avoid;
-        }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -200,81 +196,6 @@
             color: #ea580c;
         }
 
-        .qr-section {
-            margin-top: 30px;
-        }
-
-        .qr-container {
-            display: table;
-            width: 100%;
-            padding: 12px;
-            background: #ffffff;
-            border-radius: 8px;
-            border: 1px solid #f0e8e0;
-        }
-
-        .qr-code-wrapper {
-            display: table-cell;
-            width: 136px;
-            vertical-align: middle;
-            padding-right: 16px;
-        }
-
-        .qr-code {
-            width: 120px;
-            height: 120px;
-            border: 2px solid #f0e8e0;
-            border-radius: 8px;
-            padding: 8px;
-            background: #ffffff;
-            box-sizing: border-box;
-            display: table;
-            margin: 0 auto;
-        }
-
-        .qr-code-inner {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-            width: 104px;
-            height: 104px;
-        }
-
-        .qr-code svg {
-            width: 104px;
-            height: 104px;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .qr-info {
-            display: table-cell;
-            vertical-align: middle;
-        }
-
-        .qr-info {
-            flex: 1;
-        }
-
-        .qr-info .ticket-type {
-            font-weight: 700;
-            color: #1f1b18;
-            margin-bottom: 4px;
-        }
-
-        .qr-info .attendee {
-            color: #8b7355;
-            font-size: 10px;
-            margin-bottom: 8px;
-        }
-
-        .qr-info .token {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-            font-size: 9px;
-            color: #8b7355;
-            word-break: break-all;
-        }
-
         .summary-table {
             margin-top: 16px;
         }
@@ -404,30 +325,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-        <!-- QR Codes -->
-        <div class="section qr-section avoid-break">
-            <div class="section-title">QR Codes — Contrôle d'accès</div>
-            <div style="color: #8b7355; font-size: 10px; margin-bottom: 16px;">
-                Présentez ces QR codes à l'entrée de l'événement.
-            </div>
-            @foreach ($order->tickets as $ticket)
-                <div class="qr-container avoid-break" style="margin-bottom: 16px;">
-                    <div class="qr-code-wrapper">
-                        <div class="qr-code">
-                            <div class="qr-code-inner">
-                                {!! $qrSvgs[$ticket->id] ?? '' !!}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="qr-info">
-                        <div class="ticket-type">{{ $ticket->ticketType->name }}</div>
-                        <div class="attendee">{{ $ticket->attendee_first_name }} {{ $ticket->attendee_last_name }}</div>
-                        <div class="token">{{ $ticket->qr_token }}</div>
-                    </div>
-                </div>
-            @endforeach
         </div>
 
         <!-- Footer -->

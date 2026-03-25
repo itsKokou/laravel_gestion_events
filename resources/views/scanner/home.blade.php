@@ -1,114 +1,77 @@
-@extends('layouts.app')
+@extends('layouts.scanner')
 
-@section('title', 'Scanner · Win\'s Events')
+@section('title', 'Scanner · ' . config('app.name', "Win's Events"))
 
 @section('content')
-    <!-- Header -->
-    <div style="margin-bottom: 32px;">
-        <div style="margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--we-primary); text-transform: uppercase; letter-spacing: 1px;">Scanner</div>
-        <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px;">
-            Contrôle d'accès
-        </h1>
-        <p class="muted" style="font-size: 16px;">
-            Sélectionnez une soirée pour démarrer le scanner de billets
+    <div class="mb-8">
+        <p class="mb-2 text-xs font-bold uppercase tracking-wider text-orange-50/80">Contrôle d’accès</p>
+        <h1 class="text-3xl font-black tracking-tight text-white sm:text-4xl">Choisir une soirée</h1>
+        <p class="mt-2 max-w-xl text-sm text-orange-50/85">
+            Sélectionnez l’événement pour ouvrir le scanner QR (caméra ou saisie du code).
         </p>
     </div>
 
-    @if($events->isEmpty())
-        <div class="card" style="padding: 60px 40px; text-align: center;">
-            <div style="font-size: 64px; margin-bottom: 16px;">📱</div>
-            <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 12px; color: #1f1b18;">
-                Aucune soirée disponible
-            </h2>
-            <p class="muted" style="font-size: 16px;">
-                Il n'y a actuellement aucune soirée publiée à scanner.
+    @if ($events->isEmpty())
+        <div class="rounded-2xl border border-white/20 bg-white/10 px-8 py-16 text-center shadow-inner backdrop-blur-sm">
+            <p class="text-4xl" aria-hidden="true">📱</p>
+            <h2 class="mt-4 text-xl font-black text-white">Aucune soirée publiée</h2>
+            <p class="mx-auto mt-2 max-w-md text-sm text-orange-50/85">
+                Les événements au statut « publié » apparaîtront ici pour le contrôle des entrées.
             </p>
         </div>
     @else
-        <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($events as $event)
-                <a href="{{ route('scanner.event', $event) }}" style="text-decoration: none; display: block;">
-                    <div class="card" style="padding: 24px; transition: transform 120ms ease, box-shadow 120ms ease; cursor: pointer; height: 100%; display: flex; flex-direction: column;" 
-                         onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.1)'"
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(15,23,42,0.04), 0 12px 30px rgba(15,23,42,0.06)'">
-                        <!-- Header de la carte -->
-                        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
-                            <div style="flex: 1;">
-                                <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; background: rgba(234, 88, 12, 0.1); margin-bottom: 12px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(234, 88, 12, 0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: #ea580c;">
-                                        EV
-                                    </div>
-                                    <span style="font-size: 11px; font-weight: 700; color: #ea580c; text-transform: uppercase; letter-spacing: 0.5px;">
-                                        Événement
-                                    </span>
-                                </div>
-                                <h3 style="font-size: 20px; font-weight: 900; color: #1f1b18; margin: 0 0 8px 0; line-height: 1.3;">
-                                    {{ $event->name }}
-                                </h3>
-                            </div>
-                        </div>
-
-                        <!-- Informations de l'événement -->
-                        <div style="flex: 1; margin-bottom: 16px;">
-                            <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
-                                <div style="width: 20px; height: 20px; flex-shrink: 0; color: #8b7355; font-size: 16px; line-height: 20px;">📍</div>
-                                <div style="flex: 1;">
-                                    <div style="font-size: 13px; font-weight: 600; color: #1f1b18; margin-bottom: 2px;">
-                                        {{ $event->venue_name }}
-                                    </div>
-                                    <div style="font-size: 12px; color: #8b7355;">
-                                        {{ $event->venue_address }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
-                                <div style="width: 20px; height: 20px; flex-shrink: 0; color: #8b7355; font-size: 16px; line-height: 20px;">📅</div>
-                                <div style="flex: 1;">
-                                    <div style="font-size: 13px; font-weight: 600; color: #1f1b18;">
-                                        {{ $event->starts_at->format('d/m/Y à H:i') }}
-                                    </div>
-                                    <div style="font-size: 12px; color: #8b7355;">
-                                        Jusqu'à {{ $event->ends_at->format('H:i') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Statistiques -->
-                        <div style="padding: 16px; background: linear-gradient(135deg, rgba(234, 88, 12, 0.05), rgba(245, 130, 32, 0.02)); border-radius: 12px; border: 1px solid rgba(234, 88, 12, 0.15); margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <div style="font-size: 11px; font-weight: 700; color: #8b7355; text-transform: uppercase; letter-spacing: 0.5px;">
-                                    Présents
-                                </div>
-                                <div style="font-size: 18px; font-weight: 900; color: #ea580c;">
-                                    {{ $event->present_count ?? 0 }}
-                                </div>
-                            </div>
-                            @if($event->capacity)
-                                <div style="height: 6px; background: rgba(234, 88, 12, 0.1); border-radius: 999px; overflow: hidden;">
-                                    <div style="height: 100%; background: linear-gradient(90deg, #ea580c, rgba(245, 130, 32, 0.8)); border-radius: 999px; width: {{ $event->capacity > 0 ? min(100, ($event->present_count ?? 0) / $event->capacity * 100) : 0 }}%; transition: width 0.3s ease;"></div>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
-                                    <div style="font-size: 11px; color: #8b7355;">
-                                        {{ $event->capacity > 0 ? round((($event->present_count ?? 0) / $event->capacity) * 100) : 0 }}% de capacité
-                                    </div>
-                                    <div style="font-size: 11px; color: #8b7355;">
-                                        / {{ $event->capacity }} places
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- Bouton d'action -->
-                        <div style="margin-top: auto;">
-                            <div class="btn" style="width: 100%; text-align: center; padding: 12px 20px; font-size: 14px;">
-                                📱 Ouvrir le scanner
-                            </div>
+                <a href="{{ route('scanner.event', $event) }}"
+                    class="group flex flex-col rounded-2xl border border-white/25 bg-white/95 p-5 text-stone-800 shadow-md transition hover:border-white/50 hover:bg-white hover:shadow-lg no-underline">
+                    <div
+                        class="mb-3 inline-flex w-fit items-center gap-2 rounded-lg bg-[#af5c41]/12 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#8f4a36] ring-1 ring-[#af5c41]/25">
+                        Événement
                     </div>
-                </div>
-            </a>
+                    <h2 class="text-lg font-black leading-snug text-stone-900 group-hover:text-[#af5c41]">
+                        {{ $event->name }}
+                    </h2>
+                    <p class="mt-2 text-sm text-stone-600">
+                        <span class="font-medium text-stone-800">{{ $event->venue_name }}</span>
+                        @if ($event->venue_address)
+                            <span class="mt-0.5 block text-xs text-stone-500">{{ $event->venue_address }}</span>
+                        @endif
+                    </p>
+                    <p class="mt-3 text-xs text-stone-500">
+                        {{ $event->starts_at->format('d/m/Y H:i') }}
+                        @if ($event->ends_at)
+                            — {{ $event->ends_at->format('H:i') }}
+                        @endif
+                    </p>
+
+                    @php
+                        $present = (int) ($event->present_count ?? 0);
+                        $cap = (int) ($event->capacity ?? 0);
+                        $pct = $cap > 0 ? min(100, round(($present / $cap) * 100)) : 0;
+                    @endphp
+                    <div class="mt-4 rounded-xl border border-stone-200/90 bg-stone-50/80 p-3">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-semibold uppercase tracking-wide text-stone-500">Présents</span>
+                            <span class="font-black tabular-nums text-[#af5c41]">{{ $present }}</span>
+                        </div>
+                        @if ($cap > 0)
+                            <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-stone-200">
+                                <div class="h-full rounded-full bg-gradient-to-r from-[#c96b4f] to-[#af5c41] transition-all"
+                                    style="width: {{ $pct }}%"></div>
+                            </div>
+                            <div class="mt-1.5 flex justify-between text-[11px] text-stone-500">
+                                <span>{{ $pct }}% remplissage</span>
+                                <span>/ {{ $cap }} places</span>
+                            </div>
+                        @endif
+                    </div>
+
+                    <span
+                        class="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#af5c41] py-2.5 text-sm font-bold text-white shadow-sm ring-1 ring-[#8f4a36]/40 transition group-hover:bg-[#9d5038] group-hover:ring-[#8f4a36]/60">
+                        Ouvrir le scanner
+                    </span>
+                </a>
             @endforeach
-    </div>
+        </div>
     @endif
 @endsection
