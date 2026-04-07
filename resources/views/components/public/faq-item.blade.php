@@ -8,7 +8,7 @@
     data-faq-item>
     <button
         type="button"
-        class="faq-button w-full px-5 py-5 text-left flex items-start justify-between gap-4 focus:outline-none focus:ring-4 focus:ring-orange-500/20"
+        class="faq-button w-full px-5 py-5 text-left flex items-start justify-between gap-4"
         data-faq-button
         aria-expanded="false"
         aria-controls="faq-panel-{{ $faqId }}"

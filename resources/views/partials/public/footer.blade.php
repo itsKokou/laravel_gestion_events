@@ -69,7 +69,7 @@
                         class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
                 </span>
-                <span class="text-xs font-semibold text-stone-500">Tous les systèmes opérationnels</span>
+                <span class="text-xs font-semibold text-stone-500">Par Kokou Godwin</span>
             </div>
         </div>
     </div>
