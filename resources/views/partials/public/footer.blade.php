@@ -47,7 +47,7 @@
             <div>
                 <h3 class="text-xs font-black tracking-widest text-stone-900 uppercase">Support</h3>
                 <ul role="list" class="mt-4 space-y-3">
-                    <li><a href="mailto:{{ config('mail.from.address', 'contact@example.com') }}"
+                    <li><a href="{{ route('public.contact') }}"
                             class="text-sm font-medium text-stone-500 hover:text-orange-600 transition-colors">Contactez-nous</a>
                     </li>
                     <li><a href="#"

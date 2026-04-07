@@ -95,7 +95,7 @@
                                 </span>
                                 <div>
                                     <p class="text-[10px] font-black uppercase tracking-widest text-stone-400 mb-1">Siège Social</p>
-                                    <p class="text-lg font-bold text-white tracking-wide">Paris, France</p>
+                                    <p class="text-lg font-bold text-white tracking-wide">Rue DD 70 Dakar, Sénégal</p>
                                 </div>
                             </div>
                         </div>

@@ -22,11 +22,11 @@ class RolesSeeder extends Seeder
         );
 
         // Comptes par défaut (développement) - changez ces identifiants en prod.
-        $adminEmail = (string) env('DEFAULT_ADMIN_EMAIL', 'admin@example.test');
-        $adminPassword = (string) env('DEFAULT_ADMIN_PASSWORD', 'password');
+        $adminEmail = (string) env('DEFAULT_ADMIN_EMAIL', 'admin@gmail.com');
+        $adminPassword = (string) env('DEFAULT_ADMIN_PASSWORD', 'passer123');
 
-        $controllerEmail = (string) env('DEFAULT_CONTROLLER_EMAIL', 'controller@example.test');
-        $controllerPassword = (string) env('DEFAULT_CONTROLLER_PASSWORD', 'password');
+        $controllerEmail = (string) env('DEFAULT_CONTROLLER_EMAIL', 'controller@gmail.com');
+        $controllerPassword = (string) env('DEFAULT_CONTROLLER_PASSWORD', 'passer123');
 
         $admin = User::firstOrCreate(
             ['email' => $adminEmail],

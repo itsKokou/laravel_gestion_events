@@ -1,12 +1,12 @@
 @php
-    $authUser = auth()->user();
-    if ($authUser) {
-        $authUser->loadMissing('roles');
-    }
-    $contactMail = config('mail.from.address', 'contact@example.com');
-    $userInitial = $authUser
-        ? mb_strtoupper(mb_substr(trim($authUser->name ?: '?'), 0, 1))
-        : '';
+$authUser = auth()->user();
+if ($authUser) {
+    $authUser->loadMissing('roles');
+}
+$contactMail = config('mail.from.address', 'contact@example.com');
+$userInitial = $authUser
+    ? mb_strtoupper(mb_substr(trim($authUser->name ?: '?'), 0, 1))
+    : '';
 @endphp
 
 <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-panel border-b-white/50">
@@ -44,7 +44,7 @@
                 À propos 
             </a>
             <a href="{{ route('public.contact') }}"
-                class="rounded-full px-5 py-2.5 text-sm font-semibold transition-all text-stone-600 hover:text-stone-900 hover:bg-stone-100">
+                class="rounded-full px-5 py-2.5 text-sm font-semibold transition-all {{ request()->routeIs('public.contact') ? 'bg-orange-50 text-orange-600' : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100' }}">
                 Contact
             </a>
         </div>
