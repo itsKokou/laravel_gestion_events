@@ -1,7 +1,7 @@
 *.log
 .DS_Store
 .env
-.env.*
+.env.local
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -21,3 +21,5 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+PRESENTATION_PROSPECT.md
