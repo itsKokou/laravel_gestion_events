@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('name');
 
             $table->unsignedInteger('price_cents');
-            $table->char('currency', 3)->default('FCFA');
+            $table->string('currency', 4)->default('FCFA');
 
             $table->boolean('is_active')->default(true);
             $table->timestamps();
